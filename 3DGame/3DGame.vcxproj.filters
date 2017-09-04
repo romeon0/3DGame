@@ -15,8 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
+    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\camera.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\mesh.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\model.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\shader.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\3DModelLoad\3DModelLoad\Source.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
