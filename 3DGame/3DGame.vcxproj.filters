@@ -32,5 +32,8 @@
     <ClCompile Include="..\..\3DModelLoad\3DModelLoad\Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\3DModelLoad\3DModelLoad\Source.cpp" />
+    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E699A4E1-299D-47AE-8175-B39A7A99E173}</ProjectGuid>
