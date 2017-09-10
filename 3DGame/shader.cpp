@@ -10,7 +10,6 @@
 #include <iostream>
 #include "shader.h"
 
-unsigned int ID;
 // constructor generates the shader on the fly
 // ------------------------------------------------------------------------
 Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
@@ -98,11 +97,10 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 }
 // activate the shader
 // ------------------------------------------------------------------------
-void use() {
+void Shader::use() {
 	glUseProgram(ID);
 }
 
-glm::vec3 color;
 void Shader::setColor() {
 	color = glm::vec3(ID, ID, ID);
 }

@@ -3,6 +3,7 @@
 #define MESH_H
 #include "shader.h"
 #include <vector>
+#include <glm\glm.hpp>
 using namespace std;
 
 struct Vertex {

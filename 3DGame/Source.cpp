@@ -9,15 +9,14 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include "shader.h"
-#include "camera.h"
-#include "model.h"
 #include <chrono>
-
 #include <iostream>
 #include <fstream>
 #include <random>
+#include <vector>
+#include "shader.h"
+#include "camera.h"
+#include "model.h"
 using namespace glm;
 
 
@@ -31,18 +30,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-//temp(for grid)
-unsigned int VAO;
-vector<Vertex> verts;
-vector<unsigned int> inds;
-
 // camera
 Camera camera(glm::vec3(-50.0f, 32.0f, 0.0f));
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
+double lastX = SCR_WIDTH / 2.0;
+double lastY = SCR_HEIGHT / 2.0;
 bool firstMouse = true;
-
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -119,21 +111,6 @@ int main()
 	is >> path3;
 	is.close();
 
-	float x1, y1, z1, x2, y2, z2;
-	float yaw1, pitch1;
-	is.open("cameraCoords.txt");
-	is >> x1;
-	is >> y1;
-	is >> z1;
-	is >> x2;
-	is >> y2;
-	is >> z2;
-	is >> yaw1;
-	is >> pitch1;
-	Camera camera2(glm::vec3(x1, y1, z1), glm::vec3(x2, y2, z2), yaw1, pitch1);
-	//camera = camera2;
-	is.close();
-
 
 	std::mt19937_64 rng;
 	// initialize the random number generator with time-dependent seed
@@ -160,8 +137,6 @@ int main()
 	objects.insert(objects.end(), terrain);
 	cout << "Models loaded.\n";
 
-	setGrid(gridShader, terrain);
-
 	// draw in wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -180,11 +155,11 @@ int main()
 	{
 		// per-frame time logic
 		// --------------------
-		float currentFrame = glfwGetTime();
+		float currentFrame = (double)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		srand(currentFrame);
+		srand((uint)currentFrame);
 
 		// input
 		// -----
@@ -291,28 +266,28 @@ void show() {
 
 
 void setGrid(Shader gridShader, Model terrain) {
-	verts = terrain.getVertices();
-	inds = terrain.getIndices();
+	//verts = terrain.getVertices();
+	//inds = terrain.getIndices();
 
-	unsigned int VBO, EBO;
-	// create buffers/arrays
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-	glBindVertexArray(VAO);
-	// load data into vertex buffers
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	// A great thing about structs is that their memory layout is sequential for all its items.
-	// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-	// again translates to 3/2 floats which translates to a byte array.
-	glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(Vertex), &verts[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, inds.size() * sizeof(unsigned int), &inds[0], GL_STATIC_DRAW);
-	// set the vertex attribute pointers
-	// vertex Positions
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-	glBindVertexArray(0);
+	//unsigned int VBO, EBO;
+	//// create buffers/arrays
+	//glGenVertexArrays(1, &VAO);
+	//glGenBuffers(1, &VBO);
+	//glGenBuffers(1, &EBO);
+	//glBindVertexArray(VAO);
+	//// load data into vertex buffers
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//// A great thing about structs is that their memory layout is sequential for all its items.
+	//// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
+	//// again translates to 3/2 floats which translates to a byte array.
+	//glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(Vertex), &verts[0], GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, inds.size() * sizeof(unsigned int), &inds[0], GL_STATIC_DRAW);
+	//// set the vertex attribute pointers
+	//// vertex Positions
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	//glBindVertexArray(0);
 }
 
 
@@ -432,7 +407,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_sizeCallback(GLFWwindow* window, int width, int height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
@@ -450,8 +425,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 		firstMouse = false;
 	}
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	double xoffset = xpos - lastX;
+	double yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
 
 	lastX = xpos;
 	lastY = ypos;

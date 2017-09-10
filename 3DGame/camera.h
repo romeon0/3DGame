@@ -1,12 +1,12 @@
 #pragma once
 #ifndef CAMERA_H
 #define CAMERA_H
-//#pragma comment(lib, "glew32s.lib")
-//#include <GLEW/glew.h>
-//#include <GLFW/glfw3.h>
-//#include <gl/GL.h>
-//#include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
+#pragma comment(lib, "glew32s.lib")
+#include <GLEW/glew.h>
+#include <GLFW/glfw3.h>
+#include <gl/GL.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods

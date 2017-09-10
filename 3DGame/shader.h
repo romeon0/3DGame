@@ -2,7 +2,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 //#pragma comment(lib, "glew32s.lib")
-//#include <GLEW/glew.h>
+#include <GLEW/glew.h>
 #include <gl/GL.h>
 #include <glm/glm.hpp>
 #include <string>

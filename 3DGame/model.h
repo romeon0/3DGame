@@ -5,8 +5,8 @@
 
 
 #include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
-//#define STB_IMAGE_IMPLEMENTATION
+#include <glm/gtc/matrix_transform.hpp>
+#define STB_IMAGE_IMPLEMENTATION
 //#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

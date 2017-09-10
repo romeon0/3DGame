@@ -1,6 +1,3 @@
-#pragma once
-#ifndef MODEL_H
-#define MODEL_H
 //#pragma comment(lib, "glew32s.lib")
 
 
@@ -25,40 +22,28 @@
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 #include <gl/GL.h>
-using namespace std;
+#include "model.h"
 using namespace Assimp;
 using namespace glm;
 
 
 
-unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);
-
-class Model
-{
-public:
-	/*  Model Data */
-	vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-	vector<Mesh> meshes;
-	string directory;
-	bool gammaCorrection;
-	glm::mat4 matrix;
-	float width = 0, height = 0, depth = 0;
-	float x = 1000, y = 1000, z = 1000;
+unsigned int TextureFromFile(const char *path, const string &directory, bool gamma);
 
 	/*  Functions   */
 	// constructor, expects a filepath to a 3D model.
-	Model() {}
-	Model(string const &path, bool gamma = false) : gammaCorrection(gamma)
+	Model::Model() {}
+	Model::Model(string const &path, bool gamma) : gammaCorrection(gamma)
 	{
 		loadModel(path);
 	}
 
-	void extractData(string const &path, bool gamma = false) {
+	void Model::extractData(string const &path, bool gamma) {
 		gammaCorrection = gamma;
 		loadModel(path);
 	}
 
-	vector<Vertex> getVertices() {
+	vector<Vertex> Model::getVertices() {
 		vector<Vertex> vertices;
 		for (Mesh m : meshes) {
 			for (Vertex v : m.getVertices()) {
@@ -68,7 +53,7 @@ public:
 		return vertices;
 	}
 
-	vector<unsigned int> getIndices() {
+	vector<unsigned int> Model::getIndices() {
 		vector<unsigned int> indices;
 		for (Mesh m : meshes) {
 			for (unsigned i : m.getIndices()) {
@@ -79,25 +64,25 @@ public:
 	}
 
 	// draws the model, and thus all its meshes
-	void Draw(Shader shader)
+	void Model::Draw(Shader shader)
 	{
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].Draw(shader);
 	}
 
-	void translate(float x, float y, float z) {
+	void Model::translate(float x, float y, float z) {
 		matrix = glm::translate(matrix, glm::vec3(x, y, z));
 		this->x -= x;
 		this->y -= y;
 		this->z -= z;
 		//glm::vec3 c = matrix * vec4(1.0);
-		cout << "Player coords: " << this->x << ", " << this->y << ", " << this->z << endl;
+		 cout << "Player coords: " << this->x << ", " << this->y << ", " << this->z << endl;
 	}
-	mat4 fakeTranslate(float x, float y, float z) {//TODO remove the function
+	mat4 Model::fakeTranslate(float x, float y, float z) {//TODO remove the function
 		return glm::translate(matrix, glm::vec3(x, y, z));
 	}
 
-	void scale(float x, float y, float z) {
+	void Model::scale(float x, float y, float z) {
 		/*matrix = glm::scale(matrix, glm::vec3(x, y, z));
 		width /= x;
 		height /= y;
@@ -105,33 +90,32 @@ public:
 		recalculateMeshVolumes();*/
 		//TODO implement scale
 	}
-	glm::mat4 getMatrix() {
+	glm::mat4 Model::getMatrix() {
 		return matrix;
 	}
-	float getWidth() { return width; }
-	float getHeight() { return height; }
-	float getDepth() { return depth; }
-	glm::vec3 getVolume() { return glm::vec3(width, height, depth); }
-	glm::vec3 getCoords() {
+	float Model::getWidth() { return width; }
+	float Model::getHeight() { return height; }
+	float Model::getDepth() { return depth; }
+	glm::vec3 Model::getVolume() { return glm::vec3(width, height, depth); }
+	glm::vec3 Model::getCoords() {
 		vec4 coords = matrix*vec4(1.0f);
 		return vec3(coords.x, coords.y, coords.z);
 	}
-	void setCoords(glm::vec3 coord) {
+	void Model::setCoords(glm::vec3 coord) {
 		matrix = glm::translate(matrix, coord);
 	}
 
 
-private:
 	/*  Functions   */
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-	void recalculateMeshVolumes() {
+	void Model::recalculateMeshVolumes() {
 		/*for (int a = 0; a < meshes.size(); ++a) {
 		meshes[a].calculateVolume();
 		}*/
 		//TODO implement updating coords and params of meshes
 	}
 
-	void loadModel(string const &path)
+	void Model::loadModel(string const &path)
 	{
 		cout << "---Starting loading '" << path << "' model...\n";
 		cout << "Reading from file...\n" << endl;
@@ -165,7 +149,7 @@ private:
 
 	int a = 0;
 	// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-	void processNode(aiNode *node, const aiScene *scene)
+	void Model::processNode(aiNode *node, const aiScene *scene)
 	{
 		// process each mesh located at the current node
 		int numMeshes = node->mNumMeshes;
@@ -193,7 +177,7 @@ private:
 
 	}
 
-	Mesh processMesh(aiMesh *mesh, const aiScene *scene)
+	Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 	{
 		// data to fill
 		vector<Vertex> vertices;
@@ -290,7 +274,7 @@ private:
 
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.
-	vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName)
+	vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName)
 	{
 		vector<Texture> textures;
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -320,7 +304,6 @@ private:
 		}
 		return textures;
 	}
-};
 
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma)
@@ -364,4 +347,3 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 
 	return textureID;
 }
-#endif

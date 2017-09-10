@@ -16,7 +16,7 @@
 // Constructor with vectors
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) :
 	front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED),
-	mouseSensitivity(SENSITIVTY), zoom(zoom)
+	mouseSensitivity(SENSITIVTY), zoom(ZOOM)
 {
 	this->position = position;
 	worldUp = up;
@@ -36,12 +36,12 @@ Camera::Camera(float posX, float posY, float posZ,
 	front(glm::vec3(0.0f, 0.0f, -1.0f)), 
 	movementSpeed(SPEED), 
 	mouseSensitivity(SENSITIVTY),
-	zoom(zoom)
+	zoom(ZOOM)
 {
 	position = glm::vec3(posX, posY, posZ);
 	worldUp = glm::vec3(upX, upY, upZ);
-	yaw = yaw;
-	pitch = pitch;
+	this->yaw = yaw;
+	this->pitch = pitch;
 	updateCameraVectors();
 }
 
@@ -122,7 +122,7 @@ void Camera::updateCameraVectors()
 	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	front.y = sin(glm::radians(pitch));
 	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front = glm::normalize(front);
+	this->front = glm::normalize(front);
 	std::cout << glm::degrees(front.x) << ", "
 		<< glm::degrees(front.y) << ","
 		<< glm::degrees(front.z) << std::endl;
