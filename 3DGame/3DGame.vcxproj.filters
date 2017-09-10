@@ -15,24 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\camera.h">
+    <ClInclude Include="mesh.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\mesh.h">
+    <ClInclude Include="model.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\model.h">
+    <ClInclude Include="player.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\shader.h">
+    <ClInclude Include="camera.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\3DModelLoad\3DModelLoad\Source.cpp">
+    <ClCompile Include="player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp">
+    <ClCompile Include="model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

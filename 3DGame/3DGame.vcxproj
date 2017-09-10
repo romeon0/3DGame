@@ -19,14 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\camera.h" />
-    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\mesh.h" />
-    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\model.h" />
-    <ClInclude Include="..\..\3DModelLoad\3DModelLoad\shader.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="mesh.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="player.h" />
+    <ClInclude Include="shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\3DModelLoad\3DModelLoad\Source.cpp" />
-    <ClCompile Include="test.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="model.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="shader.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E699A4E1-299D-47AE-8175-B39A7A99E173}</ProjectGuid>
