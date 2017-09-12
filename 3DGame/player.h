@@ -11,10 +11,12 @@ public:
 	//getters
 	int Player::getTileX();
 	int Player::getTileY();
+	Model getModel();
 
 	//setters
 	void Player::setTileX(int x);
 	void Player::setTileY(int y);
+	void setModel(Model model);
 };
 
 #endif

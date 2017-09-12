@@ -20,13 +20,13 @@
 using namespace glm;
 
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void framebuffer_sizeCallback(GLFWwindow* window, int width, int height);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 void setGrid(Shader gridShader, Model terrain);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+void mouseCursorCallback(GLFWwindow* window, double xpos, double ypos);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -57,12 +57,8 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-#ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
-#endif
-
-														 // glfw window creation
-														 // --------------------
+	// glfw window creation
+	// --------------------
 	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGL", NULL, NULL);
 	if (window == NULL)
 	{
@@ -72,19 +68,20 @@ int main()
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_sizeCallback);
+	glfwSetCursorPosCallback(window, mouseCursorCallback);
 	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
 	// tell GLFW to capture our mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
 	if (glewInit())
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		std::cout << "Failed to initialize GLEW" << std::endl;
 		system("pause");
 		return -1;
 	}
@@ -384,9 +381,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	float pas = 2.0f;
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		player.translate(0.0, 0.0, -pas);
+		mat4 playerCoordMat = player.getMatrix();
+		vec4 pCoord = playerCoordMat*vec4(1.0f,1.0f,1.0f,1.0f);
+		pCoord = pCoord*view;
+		pCoord = normalize(pCoord);
+		cout << "PlayerCoords: " << pCoord.x << ", " << pCoord.y << ", " << pCoord.z << endl;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		player.translate(0.0, 0.0, pas);
+		mat4 playerCoordMat = player.getMatrix();
+		vec4 pCoord = playerCoordMat*vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		pCoord = pCoord*view;
+		pCoord = normalize(pCoord);
+		cout << "PlayerCoords: " << pCoord.x << ", " << pCoord.y << ", " << pCoord.z << endl;
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		player.translate(pas, 0, 0);
@@ -416,7 +423,7 @@ void framebuffer_sizeCallback(GLFWwindow* window, int width, int height)
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void mouseCursorCallback(GLFWwindow* window, double xpos, double ypos)
 {
 	if (firstMouse)
 	{
@@ -432,6 +439,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	lastY = ypos;
 
 	camera.processMouseMovement(xoffset, yoffset);
+	//cout << "CursorPos: " << xpos << ", " << ypos << endl;
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
@@ -439,4 +447,25 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.processMouseScroll(yoffset);
+}
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		double viewportX, viewportY;
+		glfwGetCursorPos(window, &viewportX, &viewportY);
+	//	cout << "Clicked: " << viewportX << ", " << viewportY << endl;
+
+		float x = (2.0f * viewportX) / SCR_WIDTH - 1.0f;
+		float y =  1.0f - (2.0f * viewportY) / SCR_HEIGHT;
+		float z = 1.0f;
+		vec3 ray_nds = vec3(x, y, z);
+		cout << "1:" << ray_nds.x << ", " << ray_nds.y << ", " << ray_nds.z << endl;
+		vec4 ray_clip = vec4(ray_nds.x, ray_nds.y, ray_nds.z, 1.0);
+		vec4 ray_eye = glm::inverse(projection)*ray_clip;
+		cout << "2:" << ray_eye.x << ", " << ray_eye.y << ", " << ray_eye.z << endl;
+		vec3 ray_wor = (inverse(view) * ray_eye);
+		ray_wor = glm::normalize(ray_wor);
+		cout << "3:" << ray_wor.x << ", " << ray_wor.y << ", " << ray_wor.z << endl;
+
+	}
 }

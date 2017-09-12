@@ -6,6 +6,9 @@ int Player::getTileX() {
 int Player::getTileY() {
 	return tileY;
 }
+Model Player::getModel() {
+	return model;
+} 
 
 //setters
 void Player::setTileX(int x) {
@@ -13,4 +16,7 @@ void Player::setTileX(int x) {
 }
 void Player::setTileY(int y) {
 	tileY = y;
+}
+void Player::setModel(Model model) {
+	this->model = model;
 }
