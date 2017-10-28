@@ -1,0 +1,14 @@
+[Model]
+id = 0
+Path = 3DModel2/box.obj
+Name = Player
+
+[Model]
+id = 1
+Path = 3DModel2/simple_map.obj
+Name = Terrain
+	
+[Model]
+id = 2
+Path = 3DModel/mytree.obj
+Name = Tree

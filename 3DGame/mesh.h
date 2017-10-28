@@ -4,6 +4,7 @@
 #include "shader.h"
 #include <vector>
 #include <glm\glm.hpp>
+#include <assimp\Importer.hpp>
 using namespace std;
 
 struct Vertex {
@@ -31,7 +32,8 @@ public:
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
 	vector<Texture> textures;
-	unsigned int VAO;
+	unsigned int VAO, VBO, EBO;
+
 	glm::vec3 color;//for click detection
 	bool colorMode = false;
 	float width, height, depth;
@@ -40,11 +42,11 @@ public:
 	/*  Functions  */
 	// constructor
 	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
-
+	~Mesh();
 
 	void calculateVolume();
 	// render the mesh
-	void Draw(Shader shader);
+	void draw(Shader shader);
 	//getters
 	glm::vec3 getVolume();
 	glm::vec3 getCoords();
@@ -54,7 +56,6 @@ public:
 
 private:
 	/*  Render data  */
-	unsigned int VBO, EBO;
 
 	/*  Functions    */
 	// initializes all the buffer objects/arrays

@@ -12,8 +12,9 @@
 
 // constructor generates the shader on the fly
 // ------------------------------------------------------------------------
-Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
+Shader::Shader(const char* vertexPath, const char* fragmentPath, ShaderComplexity complexity, const char* geometryPath)
 {
+	this->complexity = complexity;
 	// 1. retrieve the vertex/fragment source code from filePath
 	std::string vertexCode;
 	std::string fragmentCode;
@@ -57,42 +58,50 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, const char* geo
 	const char* vShaderCode = vertexCode.c_str();
 	const char * fShaderCode = fragmentCode.c_str();
 	// 2. compile shaders
-	unsigned int vertex, fragment;
-	int success;
-	char infoLog[512];
 	// vertex shader
-	vertex = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex, 1, &vShaderCode, NULL);
-	glCompileShader(vertex);
-	checkCompileErrors(vertex, "VERTEX");
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vShaderCode, NULL);
+	glCompileShader(vertexShader);
+	checkCompileErrors(vertexShader, "VERTEX");
 	// fragment Shader
-	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment, 1, &fShaderCode, NULL);
-	glCompileShader(fragment);
-	checkCompileErrors(fragment, "FRAGMENT");
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fShaderCode, NULL);
+	glCompileShader(fragmentShader);
+	checkCompileErrors(fragmentShader, "FRAGMENT");
 	// if geometry shader is given, compile geometry shader
-	unsigned int geometry;
+	//unsigned int geometry;
 	if (geometryPath != nullptr)
 	{
 		const char * gShaderCode = geometryCode.c_str();
-		geometry = glCreateShader(GL_GEOMETRY_SHADER);
-		glShaderSource(geometry, 1, &gShaderCode, NULL);
-		glCompileShader(geometry);
-		checkCompileErrors(geometry, "GEOMETRY");
+		geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+		glShaderSource(geometryShader, 1, &gShaderCode, NULL);
+		glCompileShader(geometryShader);
+		checkCompileErrors(geometryShader, "GEOMETRY");
 	}
 	// shader Program
 	ID = glCreateProgram();
-	glAttachShader(ID, vertex);
-	glAttachShader(ID, fragment);
+	glAttachShader(ID, vertexShader);
+	glAttachShader(ID, fragmentShader);
 	if (geometryPath != nullptr)
-		glAttachShader(ID, geometry);
+		glAttachShader(ID, geometryShader);
 	glLinkProgram(ID);
 	checkCompileErrors(ID, "PROGRAM");
 	// delete the shaders as they're linked into our program now and no longer necessery
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 	if (geometryPath != nullptr)
-		glDeleteShader(geometry);
+		glDeleteShader(geometryShader);
+	
+}
+
+Shader::~Shader() {
+	//std::cout << "Shader removed\n";
+	/*glUseProgram(0);
+	glLinkProgramARB(0);
+	glDetachShader(ID, fragmentShader);
+	glDetachShader(ID, vertexShader);
+	glDetachShader(ID, geometryShader);
+	glDeleteProgram(ID);*/
 
 }
 // activate the shader
@@ -101,13 +110,15 @@ void Shader::use() {
 	glUseProgram(ID);
 }
 
-void Shader::setColor() {
-	color = glm::vec3(ID, ID, ID);
+Shader& Shader::get() {
+	return *this;
 }
-glm::vec3 Shader::getColor() {
-	return color;
-}
+
+
 int Shader::getId() { return ID; }
+ShaderComplexity Shader::getComplexity() {
+	return complexity;
+}
 
 // utility uniform functions
 // ------------------------------------------------------------------------

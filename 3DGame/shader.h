@@ -7,22 +7,31 @@
 #include <glm/glm.hpp>
 #include <string>
 
+enum ShaderComplexity {
+	SHADERCOMPLEXITY_SIMPLE,//only position layout
+	SHADERCOMPLEXITY_FULL//texture, positions, normals
+};
+
 class Shader
 {
 private:
 	unsigned int ID;
-	glm::vec3 color;
+	ShaderComplexity complexity;
+	unsigned int vertexShader, fragmentShader, geometryShader;
 public:
 	// constructor generates the shader on the fly
 	// ------------------------------------------------------------------------
-	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+	Shader(const char* vertexPath, const char* fragmentPath, ShaderComplexity complexity, const char* geometryPath = nullptr);
+	~Shader();
 	// activate the shader
 	// ------------------------------------------------------------------------
 	void use();
 
-	void setColor();
-	glm::vec3 getColor();
+	Shader& get();
+
+	//getters
 	int getId();
+	ShaderComplexity Shader::getComplexity();
 
 	// utility uniform functions
 	// ------------------------------------------------------------------------

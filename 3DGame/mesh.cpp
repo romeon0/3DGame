@@ -24,20 +24,6 @@ using namespace std;
 // constructor
 Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
 {
-	double r, g, b;
-
-	std::mt19937_64 rng;
-	// initialize the random number generator with time-dependent seed
-	uint64_t timeSeed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-	std::seed_seq ss{ uint32_t(timeSeed & 0xffffffff), uint32_t(timeSeed >> 32) };
-	rng.seed(ss);
-	// initialize a uniform distribution between 0 and 1
-	std::uniform_real_distribution<double> unif(0, 1);
-	// ready to generate random numbers
-	r = unif(rng);
-	g = unif(rng);
-	b = unif(rng);
-	color = glm::vec3(r, g, b);
 
 	this->vertices = vertices;
 	this->indices = indices;
@@ -53,6 +39,19 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
 	// now that we have all the required data, set the vertex buffers and its attribute pointers.
 	setupMesh();
 }
+
+Mesh::~Mesh() {
+	/*cout << "Mesh removed" << endl;
+	glActiveTexture(GL_TEXTURE0);
+	for (Texture t : textures)
+		glDeleteTextures(1, &t.id);
+	textures.clear();
+	glBindVertexArray(0);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, &VAO);*/
+}
+
 
 vector<Vertex> Mesh::getVertices() {
 	return vertices;
@@ -89,7 +88,7 @@ void Mesh::calculateVolume() {
 	z = -min.z;
 }
 // render the mesh
-void Mesh::Draw(Shader shader)
+void Mesh::draw(Shader shader)
 {
 	// bind appropriate textures
 	unsigned int diffuseNr = 1;
@@ -120,7 +119,7 @@ void Mesh::Draw(Shader shader)
 
 	// draw mesh
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	// always good practice to set everything back to defaults once configured.
@@ -133,9 +132,6 @@ glm::vec3 Mesh::getVolume() {
 glm::vec3 Mesh::getCoords() {
 	return glm::vec3(x, y, z);
 }
-
-/*  Render data  */
-unsigned int VBO, EBO;
 
 /*  Functions    */
 // initializes all the buffer objects/arrays

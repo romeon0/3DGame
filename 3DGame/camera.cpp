@@ -19,15 +19,17 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) :
 	mouseSensitivity(SENSITIVTY), zoom(ZOOM)
 {
 	this->position = position;
+	modelMatrix = glm::translate(modelMatrix, position);
 	worldUp = up;
 	worldRight = glm::vec3(1.0f, 0.0f, 0.0f);
-	yaw = 0.0f;//0, 90
-	pitch = 90.0f;
-	updateCameraVectors();
+	this->yaw = 0.0f;
+	this->pitch = -24.0f;
 
-	gameFront = worldRight;
-	gameUp = worldUp;
+
 	gameRight = glm::vec3(0.0f, 0.0f, 1.0f);
+	gameUp = worldUp;
+	gameFront = glm::vec3(1.0f, 0.0f, 0.0f);
+	updateCameraVectors();
 }
 // Constructor with scalar values
 Camera::Camera(float posX, float posY, float posZ, 
@@ -42,6 +44,7 @@ Camera::Camera(float posX, float posY, float posZ,
 	worldUp = glm::vec3(upX, upY, upZ);
 	this->yaw = yaw;
 	this->pitch = pitch;
+	modelMatrix = glm::translate(modelMatrix, position);
 	updateCameraVectors();
 }
 
@@ -54,27 +57,43 @@ glm::mat4 Camera::getViewMatrix()
 	up*glm::vec3(5.0f, 3.0f, 5.0f));*/
 }
 
+void Camera::goTo(float x, float y, float z) {
+	modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+	position = glm::vec3(x, y, z);
+}
+
+void Camera::translate(float x, float y, float z) {
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));
+	position += glm::vec3(x, y, z);
+}
+
+glm::vec3 Camera::getPosition() {
+	return position;
+}
+
 // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void  Camera::processKeyboard(Camera_Movement direction, float deltaTime)
 {
-	/*float velocity = movementSpeed * deltaTime + 0.05f;
+	float velocity = movementSpeed * deltaTime + 0.50f;
+	glm::vec3 tmpVec;
 	if (direction == FORWARD) {
-		if (position.x + velocity > 50) {}
-		else
-			position += gameFront * velocity;
-
+		tmpVec = gameFront * velocity;
+		position += tmpVec;
 	}
 	if (direction == BACKWARD) {
-		if (position.x - velocity < -50) {}
-		else
-			position -= gameFront * velocity;
+		tmpVec = -gameFront * velocity;
+		position += tmpVec;
 	}
-	if (direction == LEFT)
-		position -= gameRight * velocity;
-	if (direction == RIGHT)
-		position += gameRight * velocity;*/
-
-	float velocity = 0.05;
+	if (direction == LEFT) {
+		tmpVec = -gameRight * velocity;
+		position += tmpVec;
+	}
+	if (direction == RIGHT) {
+		tmpVec = gameRight * velocity;
+		position += tmpVec;
+	}
+	modelMatrix = glm::translate(modelMatrix, tmpVec);
+	/*float velocity = 0.125;
 	if (direction == FORWARD) {
 			position += worldUp * velocity;
 	}
@@ -84,7 +103,7 @@ void  Camera::processKeyboard(Camera_Movement direction, float deltaTime)
 	if (direction == LEFT)
 		position -= worldRight * velocity;
 	if (direction == RIGHT)
-		position += worldRight * velocity;
+		position += worldRight * velocity;*/
 }
 
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -104,7 +123,6 @@ void  Camera::processMouseMovement(float xoffset, float yoffset, GLboolean const
 		if (pitch < -89.0f)
 			pitch = -89.0f;
 	}
-
 	// update front, right and up Vectors using the updated Eular angles
 	updateCameraVectors();
 }
@@ -114,10 +132,10 @@ void  Camera::processMouseScroll(float yoffset)
 {
 	//	if (zoom >= 1.0f && zoom <= 90.0f)
 	zoom -= yoffset;
-	if (zoom <= 1.0f)
-		zoom = 1.0f;
-	//	if (zoom >= 45.0f)
-	//		zoom = 90.0f;
+	/*if (zoom <= 10.0f)
+		zoom = 10.0f;
+	if (zoom >= 45.0f)
+		zoom = 45.0f;*/
 }
 
 // Calculates the front vector from the Camera's (updated) Eular Angles

@@ -52,22 +52,26 @@ private:
 	vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName);
 
 public:
-
-
+	string name;
 	/*  Functions   */
 	// constructor, expects a filepath to a 3D model.
 	Model();
 	Model(string const &path, bool gamma = false);
+	~Model();
 
 	void extractData(string const &path, bool gamma = false);
 	vector<Vertex> getVertices();
 
 	vector<unsigned int> getIndices();
+	void setName(string n) {
+		name = n;
+	}
 
 	// draws the model, and thus all its meshes
-	void Draw(Shader shader);
+	void draw(Shader shader);
 
 	void translate(float x, float y, float z);
+	void goTo(float x, float y, float z);
 	mat4 fakeTranslate(float x, float y, float z);
 
 	void scale(float x, float y, float z);

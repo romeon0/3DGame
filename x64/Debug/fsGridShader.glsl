@@ -13,12 +13,13 @@ void main()
 		float xMod = mod(pos.x,2.0);
 		float yMod = mod(pos.y,2.0);
 		float zMod = mod(pos.z,2.0);
-		if(xMod>=0.0 && xMod<=0.1 && pos.y==0.0)
+		if(xMod>=0.0 && xMod<=0.1 && pos.y<=0.00001)
 			FragColor=vec4(0.9,0.1,0.8,1.0);
-		else if(zMod>=0.0 && zMod<=0.1 && pos.y==0.0)
+		else if(zMod>=0.0 && zMod<=0.1 && pos.y<=0.00001)
 			FragColor=vec4(0.9,0.1,0.8,1.0);
 		else
 			FragColor = texture(texture_diffuse1, TexCoords);
+			//FragColor=vec4(0.2,0.7,0.2,1.0);
 	}
 	else
 		FragColor = texture(texture_diffuse1, TexCoords);

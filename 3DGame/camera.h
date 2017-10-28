@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #ifndef CAMERA_H
 #define CAMERA_H
 #pragma comment(lib, "glew32s.lib")
@@ -31,17 +31,16 @@ class Camera
 private:
 	// Camera Attributes
 	//player
-	glm::vec3 position;
-	glm::vec3 front;
 	glm::vec3 up;
 	glm::vec3 right;
 	//openGL world
-	glm::vec3 worldUp;
 	glm::vec3 worldRight;
+	glm::vec3 worldUp;
 	//game world
-	glm::vec3 gameUp;
-	glm::vec3 gameFront;
-	glm::vec3 gameRight;
+	glm::vec3 gameUp;//(+-)y axis
+	glm::vec3 gameRight;//(+-)z axis
+	glm::vec3 gameFront;//(+-)x axis
+	glm::mat4 modelMatrix;
 	// Euler Angles
 	float yaw;
 	float pitch;
@@ -49,10 +48,14 @@ private:
 	float movementSpeed;
 	float mouseSensitivity;
 	float zoom;
+	glm::vec3 front;
+	glm::vec3 position;
+	
 
 	// Calculates the front vector from the Camera's (updated) Eular Angles
 	void updateCameraVectors();
 public:
+	
 	// Constructor with vectors
 	Camera(glm::vec3 position = glm::vec3(0.0f, 1.0f, 0.0f),
 		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
@@ -74,6 +77,14 @@ public:
 	// Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
 	void processMouseScroll(float yoffset);
 	float getZoom();
+	void translate(float, float y, float z);
+	void goTo(float, float y, float z);
+	glm::vec3 Camera::getPosition();
+
+	bool operator==(const Camera& c)
+	{
+		return position==c.position && up==c.up && yaw==c.yaw && pitch==c.pitch;
+	}
 
 };
 #endif

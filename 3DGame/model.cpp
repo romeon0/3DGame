@@ -37,6 +37,10 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 	{
 		loadModel(path);
 	}
+	Model::~Model() {
+		//textures_loaded.clear();
+		//meshes.clear();
+	}
 
 	void Model::extractData(string const &path, bool gamma) {
 		gammaCorrection = gamma;
@@ -64,20 +68,36 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 	}
 
 	// draws the model, and thus all its meshes
-	void Model::Draw(Shader shader)
+	void Model::draw(Shader shader)
 	{
-		for (unsigned int i = 0; i < meshes.size(); i++)
-			meshes[i].Draw(shader);
+		if(meshes.size()==0)
+			cout << "NNULL meshes" << endl;
+
+		for (Mesh m : meshes) {
+			m.draw(shader);
+		}
 	}
 
 	void Model::translate(float x, float y, float z) {
 		matrix = glm::translate(matrix, glm::vec3(x, y, z));
-		this->x -= x;
-		this->y -= y;
-		this->z -= z;
+		vec3 currCoord = matrix*vec4(1.0f);
+		this->x = currCoord.x;
+		this->y = currCoord.y;
+		this->z = currCoord.z;
 		//glm::vec3 c = matrix * vec4(1.0);
-		 cout << "Player coords: " << this->x << ", " << this->y << ", " << this->z << endl;
+		cout << "Player coords: " << this->x << ", " << this->y << ", " << this->z << endl;
 	}
+
+	void Model::goTo(float x, float y, float z) {
+		matrix = glm::translate(mat4(1.0f), glm::vec3(x, y, z));
+		vec3 currCoord = matrix*vec4(1.0f);
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		//glm::vec3 c = matrix * vec4(1.0);
+		cout << "Player coords2: " << this->x << ", " << this->y << ", " << this->z << endl;
+	}
+
 	mat4 Model::fakeTranslate(float x, float y, float z) {//TODO remove the function
 		return glm::translate(matrix, glm::vec3(x, y, z));
 	}
@@ -118,7 +138,9 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 	void Model::loadModel(string const &path)
 	{
 		cout << "---Starting loading '" << path << "' model...\n";
-		cout << "Reading from file...\n" << endl;
+		cout << "Reading from file..." << endl;
+		directory = path.substr(0, path.find('/', 0));
+		cout << "Directory: " << directory << endl;
 
 		// read file via ASSIMP
 		Assimp::Importer importer;
@@ -136,14 +158,13 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 		}
 		else cout << "Model readed from file.\n";
 		// retrieve the directory path of the filepath
-		directory = path.substr(0, path.find_last_of('/'));
-		//cout << "Directory: " << directory << endl;
 
 		// process ASSIMP's root node recursively
-		cout << "Starting node processing...\n";
+	//	cout << "Starting node processing...\n";
 		processNode(scene->mRootNode, scene);
+		cout << "Model coords: " << x << ", " << y << ", " << z << endl;
 		cout << "Model volume: " << width << ", " << height << ", " << depth << endl;
-		cout << "Nodes processed.\n";
+		//	cout << "Nodes processed.\n";
 		cout << "---Model '" << path << "' loaded.\n";
 	}
 
@@ -152,8 +173,8 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 	void Model::processNode(aiNode *node, const aiScene *scene)
 	{
 		// process each mesh located at the current node
-		int numMeshes = node->mNumMeshes;
-		for (unsigned long int i = 0; i < numMeshes; i++)
+		unsigned int numMeshes = node->mNumMeshes;
+		for (unsigned int i = 0; i < numMeshes; i++)
 		{
 			// the node object only contains indices to index the actual objects in the scene. 
 			// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
@@ -280,7 +301,8 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 		{
 			aiString str;
-			mat->GetTexture(type, i, &str);
+			aiReturn ret = mat->GetTexture(type, i, &str);
+			
 			// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 			bool skip = false;
 			for (unsigned int j = 0; j < textures_loaded.size(); j++)
@@ -302,14 +324,13 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 				textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 			}
 		}
+		cout << "here3" << endl;
 		return textures;
 	}
 
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma)
 {
-	string filename = string(path);
-	filename = directory + '/' + filename;
 
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
@@ -317,7 +338,11 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 	int width, height, nrComponents;
 	string matPath = directory + "/";
 	matPath += path;
+	cout << "MatPath: " << matPath << endl;
+
 	unsigned char *data = stbi_load(matPath.c_str(), &width, &height, &nrComponents, 0);
+
+	cout << "here!" << endl;
 	if (data)
 	{
 		GLenum format;
@@ -327,23 +352,33 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 			format = GL_RGB;
 		else if (nrComponents == 4)
 			format = GL_RGBA;
-
+		else
+			cout << "ERROR!" << endl;
+		cout << "here1-1: "<<
+			format << ", " <<
+			width << ", " <<
+			height << ", "<<
+			textureID << ", "
+			<< endl;
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
-
+		cout << "here1-1-1!" << endl;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+		cout << "here1-1-2!" << endl;
 		stbi_image_free(data);
+		cout << "here1-2!" << endl;
 	}
 	else
 	{
 		std::cout << "Texture failed to load at path: " << path << std::endl;
 		stbi_image_free(data);
 	}
+
+	cout << "here-2!" << endl;
 
 	return textureID;
 }

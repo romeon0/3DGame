@@ -13,42 +13,120 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\algorithms">
+      <UniqueIdentifier>{bf04bdb2-88a7-4fd9-8fc5-0e597c8e37e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\drawing">
+      <UniqueIdentifier>{d0ed487b-e54f-44e1-8f4f-5e671f387e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\game">
+      <UniqueIdentifier>{4d0fed2e-8468-4ea5-a96f-2c3534184cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\algorithms">
+      <UniqueIdentifier>{79e95e2a-32e4-4b00-a32f-d69e50cdadbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\drawing">
+      <UniqueIdentifier>{553d0926-9c5d-45e8-95d5-462cb2ae8377}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{68be85a2-c2d6-483f-8820-6fa3c78d9126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\other">
+      <UniqueIdentifier>{7ec42298-956e-415d-89cb-cbaf68a01c89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\other">
+      <UniqueIdentifier>{5f1efd7d-38ec-4775-ab19-e3a2cee07b3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlgAStarPathfinder.h">
+      <Filter>Resource Files\algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="AlgRayBoxAABB.h">
+      <Filter>Resource Files\algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="AlgRayCasting.h">
+      <Filter>Resource Files\algorithms</Filter>
+    </ClInclude>
     <ClInclude Include="mesh.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\drawing</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\drawing</Filter>
     </ClInclude>
     <ClInclude Include="shader.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleModel.h">
+      <Filter>Resource Files\drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Resource Files\drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="GameWorld.h">
+      <Filter>Resource Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Resource Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Resource Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Resource Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper.h">
+      <Filter>Resource Files\other</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Resource Files\game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="player.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="AlgAStarPathfinder.cpp">
+      <Filter>Source Files\algorithms</Filter>
     </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="AlgRayBoxAABB.cpp">
+      <Filter>Source Files\algorithms</Filter>
     </ClCompile>
-    <ClCompile Include="mesh.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="AlgRayCasting.cpp">
+      <Filter>Source Files\algorithms</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>Source Files\drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>Source Files\drawing</Filter>
     </ClCompile>
     <ClCompile Include="shader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\drawing</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="SimpleModel.cpp">
+      <Filter>Source Files\drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="GameWorld.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Helper.cpp">
+      <Filter>Source Files\other</Filter>
+    </ClCompile>
+    <ClCompile Include="Constants.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
