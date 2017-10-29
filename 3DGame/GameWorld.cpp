@@ -217,11 +217,8 @@ void GameWorld::mouseButtonCallback(GLFWwindow* window, int button, int action, 
 		if (ret) {
 			cout << "Is collided with Terrain" << endl;
 			vec3 point = g.helper.binSearch(origin, origin + 40.0f*direction, 0, 30, 1.0f);
-			cout << "Point: " << point.x << ", " << point.y << ", " << point.z << endl;
 			vec2 tile = g.helper.toTileCoords(point, vec3(g.worldOriginX, g.worldOriginY, g.worldOriginZ));
-			cout << "Tile: " << tile.x << ", " << tile.y << endl;
 
-			cout << "Cols: " << g.gameMap->getWidth() << ", Rows: " << g.gameMap->getHeight() << endl;
 
 			//path finding
 			time_t currTime;
@@ -236,7 +233,7 @@ void GameWorld::mouseButtonCallback(GLFWwindow* window, int button, int action, 
 					matrix[a][b] = rand() % 2;
 				}
 			}
-			vector<Tile> tiles = g.pathfinder->searchPath(matrix,
+			vector<Tile> tiles = g.pathfinder->searchPath(g.gameMap->getGridPatency(),
 				rows,
 				cols,
 				g.player->getTile(),
@@ -251,16 +248,12 @@ void GameWorld::mouseButtonCallback(GLFWwindow* window, int button, int action, 
 					currPos = g.helper.toWorldCoords(t, vec3(g.worldOriginX, g.worldOriginY, g.worldOriginZ));
 					currPos.y = 1.0f;
 					v.Position = currPos;
-					vertices.push_back(v);
-				}
-
-				vector<Vertex> vts;
-				for (Vertex v : vertices) {
 					v.Position.x -= 1;
 					v.Position.z += 1;
-					vts.insert(vts.begin(), v);
+					vertices.insert(vertices.begin(), v);
 				}
-				g.pathLine->updateVertices(vts);
+
+				g.pathLine->updateVertices(vertices);
 				g.player->setRoute(tiles, false);
 			}
 			else
@@ -298,6 +291,11 @@ void GameWorld::start() {
 	if (ret == 1)
 		ret = run();
 	finish();
+	system("pause");
+}
+
+void test() {
+
 }
 
 
@@ -442,9 +440,16 @@ int GameWorld::init() {
 	gameMap = new Map(mapWidth, mapHeight);
 	gameMap->addObject(terrainModel);
 	player = new Player(playerModel, 0, 0);
+
+	for (int a = 0; a < 10; ++a) {
+		Model tree = otherModels.at(0);
+		tree.translate(worldOriginX, 1, 5.0f*a);
+		gameMap->addObject(tree);
+	}
+
 	cout << "Game elements: setted." << endl;
 
-	vector<Tile> tiles;
+	/*vector<Tile> tiles;
 	tiles.push_back(Tile(0, 0));
 	tiles.push_back(Tile(1, 0));
 	tiles.push_back(Tile(2, 0));
@@ -455,21 +460,65 @@ int GameWorld::init() {
 	tiles.push_back(Tile(7, 0));
 	tiles.push_back(Tile(8, 0));
 	tiles.push_back(Tile(9, 0));
-	player->setRoute(tiles, true);
+	player->setRoute(tiles, true);*/
 
+	/*cout << worldOriginX << ":::" << worldOriginY << ":::" << worldOriginZ << endl;
+	Helper h;
+	h.getModelTiles(vec3(3.0f, 1.0f, 1.0f), vec3(3.0f, 2.0f, 4.0f));
+	srand(glfwGetTime());
+	for (int a = 0; a < 10; ++a) {
+		h.getModelTiles(
+			vec3(worldOriginX+rand()%40, 1.0f, worldOriginZ + rand() % 40), 
+			vec3(rand() % 10, 2.0f, rand() % 10));
+	}
+	h.getModelTiles(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(0.0f, 0.0f, 0.0f), vec3(2.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(0.0f, 0.0f, 0.0f), vec3(2.5f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(0.0f, 0.0f, 0.0f), vec3(3.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(0.0f, 0.0f, 0.0f), vec3(3.2f, 0.0f, 0.0f));
+	cout << "-------\n";
+	h.getModelTiles(vec3(1.0f, 0.0f, 0.0f), vec3(0.5f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(1.0f, 0.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(1.0f, 0.0f, 0.0f), vec3(2.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(1.0f, 0.0f, 0.0f), vec3(2.5f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(1.0f, 0.0f, 0.0f), vec3(3.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(1.0f, 0.0f, 0.0f), vec3(3.2f, 0.0f, 0.0f));
+	cout << "-------\n";
+	h.getModelTiles(vec3(2.0f, 0.0f, 0.0f), vec3(0.5f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.0f, 0.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.0f, 0.0f, 0.0f), vec3(2.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.0f, 0.0f, 0.0f), vec3(2.5f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.0f, 0.0f, 0.0f), vec3(3.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.0f, 0.0f, 0.0f), vec3(3.2f, 0.0f, 0.0f));
+	cout << "-------\n";
+	h.getModelTiles(vec3(2.2f, 0.0f, 0.0f), vec3(0.5f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.2f, 0.0f, 0.0f), vec3(1.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.2f, 0.0f, 0.0f), vec3(2.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.2f, 0.0f, 0.0f), vec3(2.5f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.2f, 0.0f, 0.0f), vec3(3.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(2.2f, 0.0f, 0.0f), vec3(3.2f, 0.0f, 0.0f));
+	cout << "-------\n";
+	h.getModelTiles(vec3(8.2f, 0.0f, 0.0f), vec3(5.5f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(8.2f, 0.0f, 0.0f), vec3(4.1f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(8.2f, 0.0f, 0.0f), vec3(5.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(8.2f, 0.0f, 0.0f), vec3(7.5f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(8.2f, 0.0f, 0.0f), vec3(2.0f, 0.0f, 0.0f));
+	h.getModelTiles(vec3(8.2f, 0.0f, 0.0f), vec3(2.2f, 0.0f, 0.0f));
+	cout << "-------\n";
+	*/
 	return 1;
 }
 
-double FRAME_TIME = 1000 / 30;
+double FRAME_TIME = 1000 / 60;
 int GameWorld::run() {
 	
 	std::cout << "GameLoop started.\n";
-	lastFrame = glfwGetTime()*1000;
+	lastFrame = glfwGetTime();
 	while (!glfwWindowShouldClose(window))
 	{
-		double currentFrame = glfwGetTime()*1000;//in miliseconds
+		double currentFrame = glfwGetTime();//in miliseconds
 		currDeltaTime = currentFrame - lastFrame;
-		totalDeltaTime += currDeltaTime;
+		totalDeltaTime += currDeltaTime*1000;
 		lastFrame = currentFrame;
 		
 
@@ -561,13 +610,14 @@ void GameWorld::draw() {
 	//screenBox->draw(screenShader->get(), GL_TRIANGLES);//simple viewport box
 
 
-													   //draw raycasting vector
+	//draw raycasting vector
 	lineShader->use();
 	lineShader->setMat4("projection", projection);
 	lineShader->setMat4("view", view);
 	lineShader->setMat4("model", clickedMatrix);
 	clickedLine->draw(lineShader->get(), GL_LINES);
 
+	//draw path
 	lineShader->setMat4("projection", projection);
 	lineShader->setMat4("view", view);
 	lineShader->setMat4("model", mat4(1.0f));

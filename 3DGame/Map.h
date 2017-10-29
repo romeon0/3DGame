@@ -25,6 +25,7 @@ public:
 	vector<Model> getModels();
 	vec3 getTerrainVolume();
 	vec3 getTerrainCoords();
+	int** getGridPatency();
 
 	//other
 	void addObject(string modelPath, string modelName);

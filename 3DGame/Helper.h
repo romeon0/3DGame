@@ -3,6 +3,8 @@
 #include <glm/vec3.hpp>
 #include <cmath>
 #include "Tile.h"
+#include "Model.h"
+#include <vector>
 using glm::vec3;
 using glm::vec2;
 
@@ -22,4 +24,7 @@ public:
 
 	/*Searching the value in interval [start, end] that is in interval with epsilon length*/
 	glm::vec3 binSearch(vec3 start, vec3 end, int currIteration, int iterations, float epsilon);
+
+	vector<Tile> getModelTiles(Model m);
+	vector<Tile> Helper::getModelTiles(vec3 params, vec3 coords);
 };

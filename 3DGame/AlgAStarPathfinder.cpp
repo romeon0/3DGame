@@ -111,6 +111,14 @@ void AlgAStarPathfinder::reconstructPath(int** cameFrom, Node curr, Node start, 
 
 
 void AlgAStarPathfinder::findPath(int** map, int rows, int cols, Node start, Node goal) {
+	for (int a = 0; a < cols; ++a) {
+		for (int b = 0; b < rows; ++b) {
+			cout << map[a][b] << " ";
+		}
+		cout << endl;
+	}
+
+
 	//cout << "Test1!\n";
 	currPath.clear();
 

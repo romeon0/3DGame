@@ -1,5 +1,6 @@
 #include "Tile.h"
 #include "Map.h"
+#include "Helper.h"
 #include <vector>
 #include <iostream>
 using std::vector;
@@ -13,12 +14,7 @@ Map::Map(int mapWidth, int mapHeight) {
 	for (int a = 0; a < mapHeight; ++a) {
 		gridPatency[a] = new int[mapWidth];
 		for (int b = 0; b < mapWidth; ++b) {
-			tileBlocked = true;//TODO Implement tile blocking/deblocking
-			if (tileBlocked)
-				gridPatency[a][b] = 1;
-			else
-				gridPatency[a][b] = 0;
-
+			gridPatency[a][b] = 0;
 			tiles.push_back(Tile(a, b));
 		}
 	}
@@ -97,6 +93,9 @@ vector<Tile> Map::getNeighbors(Tile t) {
 
 	return result;
 }
+int** Map::getGridPatency() {
+	return gridPatency;
+}
 
 //other
 bool Map::isBlocked(int x, int y) {
@@ -105,8 +104,10 @@ bool Map::isBlocked(int x, int y) {
 }
 void Map::draw(Shader shader) {
 	terrain.draw(shader);
+	int counter = 1;
 	for (Model m : objects) {
-		//m.draw(shader);
+		shader.setMat4("model", m.getMatrix());
+		m.draw(shader);
 	}
 }
 void Map::addObject(string modelPath, string modelName) {
@@ -118,13 +119,28 @@ void Map::addObject(string modelPath, string modelName) {
 		terrain = model;
 	else
 		objects.push_back(model);
+
+	Helper helper;
+	vector<Tile> tiles = helper.getModelTiles(model);
+	for (Tile t : tiles) {
+		gridPatency[t.getX()][t.getY()] = 1;
+	}
 }
 void Map::addObject(Model model) {
 
 	if (model.name.compare("Terrain") == 0)
 		terrain = model;
-	else
+	else {
 		objects.push_back(model);
+		int x, y;
+		vec3 coords = model.getCoords();
+		vec3 params = model.getVolume();
+		Helper helper;
+		vector<Tile> tiles = helper.getModelTiles(model);
+		for (Tile t : tiles) {
+			gridPatency[t.getX()][t.getY()] = 1;
+		}
+	}
 }
 
 

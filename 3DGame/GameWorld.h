@@ -111,6 +111,10 @@ public:
 	float getWorldOriginZ() {
 		return worldOriginZ;
 	}
+
+	vec3 getWorldOrigin() {
+		return vec3(worldOriginX, worldOriginY, worldOriginZ);
+	}
 };
 
 #endif GAMEWORLD_H_

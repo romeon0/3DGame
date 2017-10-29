@@ -10,5 +10,5 @@ Name = Terrain
 	
 [Model]
 id = 2
-Path = 3DModel/mytree.obj
+Path = 3DModel/box.obj
 Name = Tree
