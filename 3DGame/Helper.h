@@ -27,4 +27,6 @@ public:
 
 	vector<Tile> getModelTiles(Model m);
 	vector<Tile> Helper::getModelTiles(vec3 params, vec3 coords);
+
+	mat4x4 Helper::assimpMatToGlmMat(aiMatrix4x4 assimpMat);
 };

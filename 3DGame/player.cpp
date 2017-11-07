@@ -52,9 +52,9 @@ void Player::setTile(Tile t) {
 void Player::setRoute(vector<Tile> route, bool returnToStartPos) {
 	this->route = route;
 	currFrame = 0;
-	totalFrames = route.size();
+	totalFrames = (int)route.size();
 	currFrameTime = 0.0f;
-	frameTime = 500;
+	frameTime = 500.0f/1000.0f;
 	this->returnToStartPos = returnToStartPos;
 	movementSide = 1;
 }
@@ -63,20 +63,23 @@ void Player::setRoute(vector<Tile> route, bool returnToStartPos) {
 //functions
 void Player::translate(float x, float y, float z) {
 	model.translate(x, y, z);
+	vec3 coord = model.getMatrix()*vec4(1.0f);
 	Helper h;
-	h.toTileCoords(x, z, worldOriginX, worldOriginZ);
+	vec2 tile = h.toTileCoords(coord, vec3(worldOriginX, 0,worldOriginZ));
+	cout << "Player tile: " << tile.x << ", " << tile.y << endl;
+
 }
 void Player::goTo(int tileX, int tileY) {
 	this->tileX = tileX;
 	this->tileY = tileY;
-	model.goTo(worldOriginX + tileY * 2, 1, worldOriginZ + tileX * 2);
+	model.goTo(worldOriginX + tileY * 2.0f, 1.0f, worldOriginZ + tileX * 2.0f);
 }
 void Player::goTo(Tile t) {
 	int tileX = t.getX();
 	int tileY = t.getY();
 	this->tileX = tileX;
 	this->tileY = tileY;
-	model.goTo(worldOriginX + tileY * 2, 1, worldOriginZ + tileX * 2);
+	model.goTo(worldOriginX + tileY * 2.0f, 1.0f, worldOriginZ + tileX * 2.0f);
 }
 void Player::update(double time) {
 	currFrameTime += time;

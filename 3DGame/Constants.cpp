@@ -12,9 +12,6 @@ using std::cout;
 using std::endl;
 using std::pair;
 
-//davos.science.upm.ro/~traian/ web_curs/index_ing.html
-//student@upm.ro studentupm
-//xampp, 
 Constants::Constants() {}
 Constants::Constants(const Constants& c) {}
 	
@@ -26,8 +23,7 @@ Constants::Constants(string gameSettingsFilepath, string modelsFilepath)
 	string line;
 	string attribName;
 	string tmp;
-	float floatAttribValue;
-	string stringAttribValue;
+	int value;
 	std::stringstream ss;
 	GameWorld& g = GameWorld::getInstance();
 
@@ -43,9 +39,9 @@ Constants::Constants(string gameSettingsFilepath, string modelsFilepath)
 		ss << line;
 		ss >> attribName;
 		ss >> tmp;
-		ss >> floatAttribValue;
-		if (attribName.compare("ScreenWidth") == 0) { SCREEN_WIDTH = floatAttribValue; }
-		else if (attribName.compare("ScreenHeight") == 0) { SCREEN_HEIGHT = floatAttribValue; }
+		ss >> value;
+		if (attribName.compare("ScreenWidth") == 0) { SCREEN_WIDTH = value; }
+		else if (attribName.compare("ScreenHeight") == 0) { SCREEN_HEIGHT = value; }
 		else {
 			cout << "Settings: Error in parsing '" << gameSettingsFilepath << "'.\n";
 			break;
@@ -72,7 +68,6 @@ Constants::Constants(string gameSettingsFilepath, string modelsFilepath)
 		if (line.compare("") == 0) break;
 
 		ss << line;
-		cout << "Line1: " << ss.str() << endl;
 		ss >> attribName;//id
 		ss >> tmp;// = 
 		ss >> id;//3445
@@ -80,7 +75,6 @@ Constants::Constants(string gameSettingsFilepath, string modelsFilepath)
 		ss.clear();//clear buffer
 		std::getline(file, line);//Path = 3DModel2/tile.obj
 		ss << line;
-		cout << "Line2: " << ss.str() << endl;
 		ss >> attribName;//Path
 		ss >> tmp;//=
 		ss >> path;//	data/models/.../model.obj
@@ -88,7 +82,6 @@ Constants::Constants(string gameSettingsFilepath, string modelsFilepath)
 		ss.clear();//clear buffer
 		std::getline(file, line);//Name = Player
 		ss << line;
-		cout << "Line3: " << ss.str() << endl;
 		ss >> attribName;//Name
 		ss >> tmp;//=
 		ss >> name;//terrain
@@ -96,7 +89,6 @@ Constants::Constants(string gameSettingsFilepath, string modelsFilepath)
 		ss.str(string());
 		ss.clear();//clear buffer
 
-		cout << "INP: " <<id << ":" << name <<", " << path << endl;
 		pair<string, string> pathAndName;
 		pathAndName.first = name;
 		pathAndName.second = path;

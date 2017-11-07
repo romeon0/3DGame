@@ -22,6 +22,7 @@
 #include "shader.h"
 #include "camera.h"
 #include "model.h"
+#include "AnimatedModel.h"
 #include "SimpleModel.h"
 #include "AlgRayBoxAABB.h"
 #include "AlgRayCasting.h"
@@ -47,6 +48,7 @@ private:
 	float currDeltaTime = 0.0f;
 	float totalDeltaTime = 0.0f;
 	float lastFrame = 0.0f;
+	float FRAME_TIME = 1000 / 60;
 	//models/objects
 	SimpleModel* clickedLine;
 	SimpleModel* pathLine;
@@ -69,6 +71,7 @@ private:
 	Map* gameMap;
 	//Player
 	Player* player;
+	Animator* animator;
 
 	// process all inputs
 	//-------------------

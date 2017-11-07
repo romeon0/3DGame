@@ -37,6 +37,9 @@
     <Filter Include="Resource Files\other">
       <UniqueIdentifier>{5f1efd7d-38ec-4775-ab19-e3a2cee07b3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\drawing\animation">
+      <UniqueIdentifier>{95a9dc4d-d58a-49c2-8078-7d4e55ea3845}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlgAStarPathfinder.h">
@@ -80,6 +83,9 @@
     </ClInclude>
     <ClInclude Include="Constants.h">
       <Filter>Resource Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedModel.h">
+      <Filter>Source Files\drawing\animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="Constants.cpp">
       <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedModel.cpp">
+      <Filter>Source Files\drawing\animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

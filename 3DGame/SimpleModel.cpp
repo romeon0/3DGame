@@ -44,7 +44,7 @@ void SimpleModel::draw(Shader shader, GLenum drawMode) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vertices.size(), &vertices[0], GL_DYNAMIC_DRAW);
 	//glDrawElements(drawMode, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
-	glDrawArrays(drawMode, 0, vertices.size());
+	glDrawArrays(drawMode, 0, (GLsizei)vertices.size());
 	glBindVertexArray(0);
 }
 

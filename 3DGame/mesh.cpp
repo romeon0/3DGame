@@ -169,6 +169,12 @@ void Mesh::setupMesh()
 	// vertex bitangent
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+	// vertex bone names
+	glEnableVertexAttribArray(5);
+	glVertexAttribIPointer(5, 4, GL_INT, GL_FALSE, (void*)offsetof(Vertex, jointIDs));
+	// vertex bone weights
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, jointWeights));
 
 	glBindVertexArray(0);
 }

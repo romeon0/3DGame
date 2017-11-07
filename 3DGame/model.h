@@ -6,8 +6,10 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#define STB_IMAGE_IMPLEMENTATION
-//#include <assimp/Importer.hpp>
+#ifndef  STBI_LOADED_
+	#define STBI_LOADED_
+	#include <stb/stb_image.h>
+#endif
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "mesh.h"
@@ -21,8 +23,6 @@ using namespace glm;
 
 
 
-unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);
-
 class Model
 {
 private:
@@ -34,57 +34,46 @@ private:
 	glm::mat4 matrix;
 	float width = 0, height = 0, depth = 0;
 	float x = 1000, y = 1000, z = 1000;
+	string name;
 
 	/*  Functions   */
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-	void recalculateMeshVolumes();
-
+	void recalculateMeshVolumes(float x, float y, float z);
 	void loadModel(string const &path);
-
-	int a = 0;
 	// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 	void processNode(aiNode *node, const aiScene *scene);
-
 	Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.
 	vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName);
 
 public:
-	string name;
-	/*  Functions   */
-	// constructor, expects a filepath to a 3D model.
 	Model();
 	Model(string const &path, bool gamma = false);
 	~Model();
 
-	void extractData(string const &path, bool gamma = false);
-	vector<Vertex> getVertices();
-
-	vector<unsigned int> getIndices();
-	void setName(string n) {
-		name = n;
-	}
-
-	// draws the model, and thus all its meshes
-	void draw(Shader shader);
-
-	void translate(float x, float y, float z);
-	void goTo(float x, float y, float z);
-	mat4 fakeTranslate(float x, float y, float z);
-
-	void scale(float x, float y, float z);
+	//getters
 	glm::mat4 getMatrix();
 	float getWidth();
 	float getHeight();
 	float getDepth();
 	glm::vec3 getVolume();
 	glm::vec3 getCoords();
+	string getName();
+	vector<unsigned int> getIndices();
+	vector<Vertex> getVertices();
+
+	//setters
 	void setCoords(glm::vec3 coord);
+	void setName(string n);
 
+	//other
+	unsigned int TextureFromFile(const char *path, const string &directory, bool gamma=false);
+	void scale(float x, float y, float z);
+	void translate(float x, float y, float z);
+	void goTo(float x, float y, float z);
+	mat4 fakeTranslate(float x, float y, float z);
+	void draw(Shader shader);// draws the model, and thus all its meshes
+	void extractData(string const &path, bool gamma = false);//if used empty constructor
 };
-
-
-unsigned int TextureFromFile(const char *path, const string &directory, bool gamma);
 #endif

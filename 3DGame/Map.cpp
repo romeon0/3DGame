@@ -9,7 +9,6 @@ Map::Map(int mapWidth, int mapHeight) {
 	this->width = mapWidth;
 	this->height = mapHeight;
 
-	bool tileBlocked;
 	gridPatency = new int*[mapHeight];
 	for (int a = 0; a < mapHeight; ++a) {
 		gridPatency[a] = new int[mapWidth];
@@ -37,7 +36,7 @@ mat4 Map::getMatrix(string objName) {
 		return terrain.getMatrix();
 	else {
 		for (Model model : objects) {
-			if (model.name.compare(objName) == 0)
+			if (model.getName().compare(objName) == 0)
 				return model.getMatrix();
 		}
 	}
@@ -113,7 +112,7 @@ void Map::draw(Shader shader) {
 void Map::addObject(string modelPath, string modelName) {
 	Model model;
 	model.extractData(modelPath);
-	model.name = modelName;
+	model.setName(modelName);
 
 	if (modelName.compare("Terrain") == 0)
 		terrain = model;
@@ -128,11 +127,10 @@ void Map::addObject(string modelPath, string modelName) {
 }
 void Map::addObject(Model model) {
 
-	if (model.name.compare("Terrain") == 0)
+	if (model.getName().compare("Terrain") == 0)
 		terrain = model;
 	else {
 		objects.push_back(model);
-		int x, y;
 		vec3 coords = model.getCoords();
 		vec3 params = model.getVolume();
 		Helper helper;

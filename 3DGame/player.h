@@ -17,7 +17,7 @@ private:
 
 	//coords
 	int tileX, tileY;
-	int worldOriginX, worldOriginZ;
+	float worldOriginX, worldOriginZ;
 	Model model;
 
 	Player();

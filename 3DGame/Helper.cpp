@@ -3,6 +3,7 @@
 #include "GameWorld.h"
 #include <glm/vec3.hpp>
 #include <iostream>
+#include<assimp/matrix4x4.h>
 using std::cout;
 using std::endl;
 using glm::vec3;
@@ -18,17 +19,19 @@ glm::vec2 Helper::toNormDevCoords(float viewportX, float viewportY, float scrWid
 /*Transform terrain coords to tile coord*/
 int* Helper::toTileCoords(float terrainX, float terrainZ, float terrainMinX, float terrainMinZ) {
 	int x, y;
-	float offsetX = terrainX - terrainMinX;
-	float offsetZ = terrainZ - terrainMinZ;
+	float offsetX = abs(terrainX - terrainMinX);
+	float offsetZ = abs(terrainZ - terrainMinZ);
 	x = (int)(offsetZ / 2);
 	y = (int)(offsetX / 2);
-	int result[2] = { x,y };
+	int* result = new int[2];
+	result[0] = x;
+	result[1] = y;
 	return result;
 }
 /*Transform terrain coords to tile coord*/
 vec2 Helper::toTileCoords(vec3 terrainCoords, vec3 terrainMin) {
 	int x, y;
-	vec3 offset = abs(terrainCoords - terrainMin);
+	vec3 offset = abs(terrainMin- terrainCoords);
 	x = (int)(offset.z / 2);
 	y = (int)(offset.x / 2);
 	return vec2((int)x, (int)y);
@@ -70,75 +73,101 @@ vector<Tile> Helper::getModelTiles(Model m) {
 
 vector<Tile> Helper::getModelTiles(vec3 coords, vec3 params) {
 	/*
-		^
-		|
-		x
-		z---->
+	^
+	|
+	x
+	z---->
 	*/
 	vector<Tile> tiles;
-	Tile t(-1, -1);
 	float x1 = coords.x, x2 = coords.x + params.x;
 	float y1 = coords.z, y2 = coords.z + params.z;
-	float xCurr, yCurr;
-	bool finish;
-	int counter;
+	float restX, restY;
 
-	/*
-	Ex1:
-		Input: coord(3,1,1),volume(3,2,4).
-		Body:
-			start = coord = 3,1,1
-			final = coord+volume = 6,3,5
-		Res: nrOfXTiles =  start.x%2==0?0:1 + ((start.x-start.x%2)+2) + ((start.x-start.x%2)+4) = 1+1+1=3;
-			 nrOfYTiles =  start.y%2==0?0:1 + ((start.y-start.y%2)+2) + ((start.y-start.y%2)+4) = 1+1+1=3;
-
-	*/
-	// If Z,X coords modulus by 2 has rest, then round to number that has modulus from 2 zero
-	//----------
-	xCurr = fmod(x1, 2.0f);// x1 % 2;
-	yCurr = fmod(y1, 2.0f);
 	cout << "Params: " << params.x << ", " << params.y << ", " << params.z << endl;
 	cout << "Coords: " << coords.x << ", " << coords.y << ", " << coords.z << endl;
-	cout << "X1: " << x1 << endl;
-	cout << "Y1: " << y1 << endl;
-
-
-	xCurr = (x1 - xCurr);
-	yCurr = (y1 - yCurr);
-
-	cout << "X1Curr: " << xCurr << endl;
-	cout << "Y1Curr: " << yCurr << endl;
-	//----------
-
 	GameWorld& g = GameWorld::getInstance();
 	vec3 worldMin = g.getWorldOrigin();
 
-	finish = false;
-	counter = 0;
-	while (!finish) {
-		xCurr += 2;
-		if (xCurr >= x2) {
-			finish = true;
+	restX = fmod(x1, 2.0f);
+	restY = fmod(y1, 2.0f);
+
+	if (restX == 0) {
+		if (restY == 0) {//x and y even number
+			x1 += 1; 
+			y1 += 1;
+			for (float x = x1; x < x2; x += 2) {
+				for (float y = y1; y < y2; y += 2) {
+					vec2 tile = toTileCoords(vec3(x, 0, y), worldMin);
+					tile.x -= 1;
+					tile.y -= 1;
+					tiles.push_back(tile);
+				}
+			}
 		}
-		++counter;
-		vec2 tileCoord = toTileCoords(vec3(xCurr-1, 0.0f, y1), worldMin);
-		tiles.push_back(Tile(tileCoord));
-		cout << "TileCoord: " << tileCoord.x << ", " << tileCoord.y << endl;
-	}
-	cout << "TilesCountX: " << counter << endl;
-	finish = false;
-	counter = 0;
-	while (!finish) {
-		yCurr += 2;
-		if (yCurr >= y2) {
-			finish = true;
+		else //only x even number
+		{
+			x1 += 1;
+			for (float x = x1; x < x2; x += 2) {
+				for (float y = y1; y <= y2; y += 2) {
+					vec2 tile = toTileCoords(vec3(x, 0, y), worldMin);
+					tile.x -= 1;
+					tile.y -= 1;
+					tiles.push_back(tile);
+				}
+			}
 		}
-		++counter;
-		vec2 tileCoord = toTileCoords(vec3(x1, 0.0f, yCurr-1), worldMin);
-		tiles.push_back(Tile(tileCoord));
-		cout << "TileCoord: " << tileCoord.x << ", " << tileCoord.y << endl;
 	}
-	cout << "TilesCountY: " << counter << endl;
+	else { 
+		if (restY == 0) { //only y even number
+			y1 += 1;
+			for (float x = x1; x <= x2; x += 2) {
+				for (float y = y1; y < y2; y += 2) {
+					vec2 tile = toTileCoords(vec3(x, 0, y), worldMin);
+					tile.x -= 1;
+					tile.y -= 1;
+					tiles.push_back(tile);
+				}
+			}
+		}
+		else //both x1 and y1 odd number
+		{
+			for (float x = x1; x <= x2; x += 2) {
+				for (float y = y1; y <= y2; y += 2) {
+					vec2 tile = toTileCoords(vec3(x, 0, y), worldMin);
+					tile.x -= 1;
+					tile.y -= 1;
+					tiles.push_back(tile);
+				}
+			}
+		}
+	}
 
 	return tiles;
+}
+
+mat4x4 Helper::assimpMatToGlmMat(aiMatrix4x4 assimpMat) {
+	cout << "Assimp matrix: " << endl;
+	for (int a = 0; a < 4; ++a) {
+		for (int b = 0; b < 4; ++b) {
+			cout << assimpMat[a][b] << " ";
+		}
+		cout << endl;
+	}
+	cout << "-------------------" << endl;
+
+	mat4 glmMat(assimpMat.a1, assimpMat.a2, assimpMat.a3, assimpMat.a4,
+		assimpMat.b1, assimpMat.b2, assimpMat.b3, assimpMat.b4,
+		assimpMat.c1, assimpMat.c2, assimpMat.c3, assimpMat.c4,
+		assimpMat.d1, assimpMat.d2, assimpMat.d3, assimpMat.d4);
+
+	cout << "Glm matrix: " << endl;
+	for (int a = 0; a < 4; ++a) {
+		for (int b = 0; b < 4; ++b) {
+			cout << glmMat[a][b] << " ";
+		}
+		cout << endl;
+	}
+	cout << "-------------------" << endl;
+
+	return glmMat;
 }

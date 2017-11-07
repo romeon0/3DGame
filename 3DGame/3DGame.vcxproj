@@ -22,6 +22,7 @@
     <ClInclude Include="AlgAStarPathfinder.h" />
     <ClInclude Include="AlgRayBoxAABB.h" />
     <ClInclude Include="AlgRayCasting.h" />
+    <ClInclude Include="AnimatedModel.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="GameWorld.h" />
@@ -49,6 +50,7 @@
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="SimpleModel.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="AnimatedModel.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
