@@ -1,0 +1,23 @@
+[Ammo]
+type = 0
+name = .45 AP
+model = models/ammo.dae
+desc 
+{
+This type of ammo is using at pistol Beretta A21
+}
+damage = 40
+speed = 0.20
+penetration = 45
+
+[Ammo]
+type = 29
+name = 4.47
+model = models/ammo.dae
+desc 
+{
+This type of ammo is using at AK-47
+}
+damage = 120
+speed = 0.10
+penetration = 60

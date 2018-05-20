@@ -29,11 +29,12 @@ private:
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
 	bool hasTexture;
+	unsigned int textureId=-1;
 
-	void SimpleModel::initModel();
+	void SimpleModel::initModel(string texturePath);
 public:
 	GLuint vao, vbo, ibo;
-	SimpleModel(vector<Vertex> vertices, vector<unsigned int> indices, bool hasTexture=false);
+	SimpleModel(vector<Vertex> vertices, vector<unsigned int> indices, string texturePath="");
 	vector<Vertex> getVertices();
 	vector<unsigned int> getIndices();
 	void setName(string n);

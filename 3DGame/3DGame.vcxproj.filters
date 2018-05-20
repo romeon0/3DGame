@@ -40,6 +40,18 @@
     <Filter Include="Source Files\drawing\animation">
       <UniqueIdentifier>{95a9dc4d-d58a-49c2-8078-7d4e55ea3845}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\drawing\animation">
+      <UniqueIdentifier>{c452d1d5-7121-4417-9368-81659aa4d718}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\gameObjects">
+      <UniqueIdentifier>{ae346aea-7200-4707-ae9c-1cff24d8eab4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Unit tests">
+      <UniqueIdentifier>{fd710b1e-e794-4089-adec-f272b032fc04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\GUI">
+      <UniqueIdentifier>{554a4fac-7cd9-4100-9044-426e59f760fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlgAStarPathfinder.h">
@@ -85,7 +97,49 @@
       <Filter>Resource Files\game</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedModel.h">
-      <Filter>Source Files\drawing\animation</Filter>
+      <Filter>Resource Files\drawing\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Resource Files\drawing\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyFrame.h">
+      <Filter>Resource Files\drawing\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="BoneMesh.h">
+      <Filter>Resource Files\drawing\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Ammo.h">
+      <Filter>Resource Files\gameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="AmmoManager.h">
+      <Filter>Resource Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="AmmoProperty.h">
+      <Filter>Resource Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Unit.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="AlgBoxBoxAABB.h">
+      <Filter>Resource Files\algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="CollideTesting.h">
+      <Filter>Source Files\Unit tests</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitAttribs.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextManager.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressBar.h">
+      <Filter>Resource Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +190,36 @@
     </ClCompile>
     <ClCompile Include="AnimatedModel.cpp">
       <Filter>Source Files\drawing\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyFrame.cpp">
+      <Filter>Source Files\drawing\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Source Files\drawing\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="BoneMesh.cpp">
+      <Filter>Source Files\drawing\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Ammo.cpp">
+      <Filter>Resource Files\gameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="AmmoManager.cpp">
+      <Filter>Resource Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="AmmoProperty.cpp">
+      <Filter>Resource Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Unit.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="CollideTesting.cpp">
+      <Filter>Source Files\Unit tests</Filter>
+    </ClCompile>
+    <ClCompile Include="AlgBoxBoxAABB.cpp">
+      <Filter>Source Files\algorithms</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

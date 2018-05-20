@@ -18,9 +18,6 @@ struct Vertex {
 	glm::vec3 Tangent;
 	// bitangent
 	glm::vec3 Bitangent;
-
-	glm::ivec4 jointIDs;
-	glm::vec4 jointWeights;
 };
 
 struct Texture {

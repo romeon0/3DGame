@@ -7,11 +7,11 @@ using glm::vec3;
 
 class AlgRayBoxAABB {
 private:
-	vec3 tnear, tfar;
+	double tnear, tfar;
 public:
 	bool isCollided(vec3 boxMin, vec3 boxMax, vec3 rayOrigin, vec3 rayDir);
-	vec3 getTNear();
-	vec3 getTFar();
+	double getTNear();
+	double getTFar();
 };
 
 #endif

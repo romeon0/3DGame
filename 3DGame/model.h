@@ -32,19 +32,18 @@ private:
 	string directory;
 	bool gammaCorrection;
 	glm::mat4 matrix;
+	glm::mat4 rotationMatrix;
+	vec3 scalingVector;
 	float width = 0, height = 0, depth = 0;
 	float x = 1000, y = 1000, z = 1000;
 	string name;
+	string path;
+	bool selected = false;//if object is selected
 
-	/*  Functions   */
-	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 	void recalculateMeshVolumes(float x, float y, float z);
 	void loadModel(string const &path);
-	// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 	void processNode(aiNode *node, const aiScene *scene);
 	Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-	// checks all material textures of a given type and loads the textures if they're not loaded yet.
-	// the required info is returned as a Texture struct.
 	vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName);
 
 public:
@@ -54,6 +53,7 @@ public:
 
 	//getters
 	glm::mat4 getMatrix();
+	glm::mat4 getRotationMatrix();
 	float getWidth();
 	float getHeight();
 	float getDepth();
@@ -62,6 +62,7 @@ public:
 	string getName();
 	vector<unsigned int> getIndices();
 	vector<Vertex> getVertices();
+	string getPath();
 
 	//setters
 	void setCoords(glm::vec3 coord);
@@ -75,5 +76,10 @@ public:
 	mat4 fakeTranslate(float x, float y, float z);
 	void draw(Shader shader);// draws the model, and thus all its meshes
 	void extractData(string const &path, bool gamma = false);//if used empty constructor
+	bool isSelected();
+	void setSelected(bool value);
+	
+	void rotateRad(float rad, int axis);//@param axis : 1=x, 2=y, 3=z
+	void rotateDegree(float degree, int axis);//@param axis : 1=x, 2=y, 3=z
 };
 #endif

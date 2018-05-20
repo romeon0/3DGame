@@ -1,12 +1,14 @@
 #include "Constants.h"
 #include "GameWorld.h"
 #include <vector>
+#include <map>
 #include <sstream>
 #include <fstream>
 #include <string>
 #include <iostream>
 using std::string;
 using std::vector;
+using std::map;
 using std::ifstream;
 using std::cout;
 using std::endl;
@@ -23,7 +25,8 @@ Constants::Constants(string gameSettingsFilepath, string modelsFilepath)
 	string line;
 	string attribName;
 	string tmp;
-	int value;
+	int intValue;
+	string strValue;
 	std::stringstream ss;
 	GameWorld& g = GameWorld::getInstance();
 
@@ -35,15 +38,32 @@ Constants::Constants(string gameSettingsFilepath, string modelsFilepath)
 		return;
 	}
 	while (!file.eof()) {
-		std::getline(file, line);
-		ss << line;
-		ss >> attribName;
-		ss >> tmp;
-		ss >> value;
-		if (attribName.compare("ScreenWidth") == 0) { SCREEN_WIDTH = value; }
-		else if (attribName.compare("ScreenHeight") == 0) { SCREEN_HEIGHT = value; }
+		file >> attribName;
+		if (attribName.length() == 0) continue;
+		file >> tmp;
+		if (attribName.length() == 0) continue;
+		file >> strValue;
+		if (attribName.length() == 0) continue;
+
+		if (attribName.compare("ScreenWidth") == 0) {
+			ss << strValue;
+			ss >> intValue;
+			SCREEN_WIDTH = intValue;
+		}
+		else if (attribName.compare("ScreenHeight") == 0) {
+			ss << strValue;
+			ss >> intValue;
+			SCREEN_HEIGHT = intValue;
+		}
+		else if (attribName.compare("AmmosPath") == 0) {
+			AMMOS_FILEPATH = strValue;
+			
+		}
 		else {
-			cout << "Settings: Error in parsing '" << gameSettingsFilepath << "'.\n";
+			cout << "Settings: Error in parsing '" << gameSettingsFilepath << "'. ";
+			cout << "Wrong attribute '" << attribName << "'.\n";
+			loaded = false;
+			system("pause");
 			break;
 		}
 		ss.clear();
@@ -97,6 +117,10 @@ Constants::Constants(string gameSettingsFilepath, string modelsFilepath)
 		modelsPaths.insert(pair_);
 	}
 	file.close();
+
+	//ammo.lst
+	parseAmmos(AMMOS_FILEPATH);
+
 }
 
 //getters
@@ -111,9 +135,16 @@ map<int, pair<string,string>> Constants::getModelsPaths() {
 bool Constants::isLoaded() {
 	return loaded;
 }
-
+map<int,AmmoProperty> Constants::getAmmosProperties() {
+	return ammosProperties;
+}
+map<int, Model> Constants::getAmmosModels() {
+	return ammosModels;
+}
 //setters
 void Constants::screenWidth(int width) { SCREEN_WIDTH = width; }
 void Constants::screenHeight(int height) { SCREEN_HEIGHT = height; }
 
+void Constants::parseAmmos(string filePath) {
 
+}

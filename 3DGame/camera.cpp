@@ -74,6 +74,7 @@ glm::vec3 Camera::getPosition() {
 // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void  Camera::processKeyboard(Camera_Movement direction, float deltaTime)
 {
+	deltaTime /= 1000;
 	float velocity = movementSpeed * deltaTime + 0.50f;
 	glm::vec3 tmpVec;
 	if (direction == FORWARD) {

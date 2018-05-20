@@ -83,9 +83,9 @@ void Mesh::calculateVolume() {
 	width = abs(max.x - min.x);
 	height = abs(max.y - min.y);
 	depth = abs(max.z - min.z);
-	x = -min.x;
-	y = -min.y;
-	z = -min.z;
+	x = min.x;
+	y = min.y;
+	z = min.z;
 }
 // render the mesh
 void Mesh::draw(Shader shader)
@@ -97,7 +97,7 @@ void Mesh::draw(Shader shader)
 	unsigned int heightNr = 1;
 	for (unsigned int i = 0; i < textures.size(); i++)
 	{
-		glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+		glActiveTexture(GL_TEXTURE0 + i); // active before binding
 											// retrieve texture number (the N in diffuse_textureN)
 		stringstream ss;
 		string number;
@@ -119,10 +119,11 @@ void Mesh::draw(Shader shader)
 
 	// draw mesh
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT,(void*)0);
+	
 
-	// always good practice to set everything back to defaults once configured.
+	//set to default
+	glBindVertexArray(0);
 	glActiveTexture(GL_TEXTURE0);
 }
 
@@ -169,12 +170,14 @@ void Mesh::setupMesh()
 	// vertex bitangent
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
-	// vertex bone names
+	
+
+	/*// vertex bone names
 	glEnableVertexAttribArray(5);
 	glVertexAttribIPointer(5, 4, GL_INT, GL_FALSE, (void*)offsetof(Vertex, jointIDs));
 	// vertex bone weights
 	glEnableVertexAttribArray(6);
 	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, jointWeights));
-
+	*/
 	glBindVertexArray(0);
 }

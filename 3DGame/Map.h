@@ -22,15 +22,16 @@ public:
 	int getWidth();
 	int getHeight();
 	mat4 getMatrix(string objName);
-	vector<Model> getModels();
+	mat4 getTerrainMatrix();
+	vector<Model>& getModels();
 	vec3 getTerrainVolume();
 	vec3 getTerrainCoords();
 	int** getGridPatency();
+	Model getTerrain();
 
 	//other
 	void addObject(string modelPath, string modelName);
 	void addObject(Model model);
-	void draw(Shader shader);
 	bool isBlocked(int x, int y);
 
 };

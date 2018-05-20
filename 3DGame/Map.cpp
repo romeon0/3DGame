@@ -22,7 +22,7 @@ Map::Map(int mapWidth, int mapHeight) {
 //getters
 int Map::getWidth() { return width; }
 int Map::getHeight() { return height; }
-vector<Model> Map::getModels() {
+vector<Model>& Map::getModels() {
 	return objects;
 }
 vec3 Map::getTerrainVolume() {
@@ -32,15 +32,14 @@ vec3 Map::getTerrainCoords() {
 	return terrain.getCoords();
 }
 mat4 Map::getMatrix(string objName) {
-	if (objName.compare("Terrain") == 0)
-		return terrain.getMatrix();
-	else {
-		for (Model model : objects) {
-			if (model.getName().compare(objName) == 0)
-				return model.getMatrix();
-		}
+	for (Model model : objects) {
+		if (model.getName().compare(objName) == 0)
+			return model.getMatrix();
 	}
 	return mat4(1.0f);
+}
+mat4 Map::getTerrainMatrix() {
+	return terrain.getMatrix();
 }
 vector<Tile> Map::getNeighbors(Tile t) {
 	int x = t.getX();
@@ -101,23 +100,16 @@ bool Map::isBlocked(int x, int y) {
 	if (x < 0 || x >= width || y < 0 || y >= height) return true;
 	return gridPatency[x][y] == 1;
 }
-void Map::draw(Shader shader) {
-	terrain.draw(shader);
-	int counter = 1;
-	for (Model m : objects) {
-		shader.setMat4("model", m.getMatrix());
-		m.draw(shader);
-	}
-}
+
 void Map::addObject(string modelPath, string modelName) {
 	Model model;
 	model.extractData(modelPath);
 	model.setName(modelName);
 
-	if (modelName.compare("Terrain") == 0)
-		terrain = model;
-	else
+	if (modelName.compare("Terrain") != 0)
 		objects.push_back(model);
+	else
+		terrain = model;
 
 	Helper helper;
 	vector<Tile> tiles = helper.getModelTiles(model);
@@ -140,6 +132,8 @@ void Map::addObject(Model model) {
 		}
 	}
 }
+
+Model Map::getTerrain() { return terrain; }
 
 
 

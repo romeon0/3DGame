@@ -1,14 +1,14 @@
 [Model]
 id = 0
-Path = models/color_box.obj
+Path = models/test.dae
 Name = Player
 
 [Model]
 id = 1
-Path = models/simple_map.obj
+Path = models/map.dae
 Name = Terrain
 	
 [Model]
 id = 2
-Path = models/wall.obj
+Path = models/ammo.dae
 Name = Tree

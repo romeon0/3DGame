@@ -1,162 +1,116 @@
 #pragma once
-#ifndef ANIMATEDMODEL_H_
-#define ANIMATEDMODEL_H_
+#ifndef ANIMATEDMODEL_H
+#define ANIMATEDMODEL_H
 
-#include <iostream>
 #include <string>
-#include <list>
 #include <vector>
 #include <map>
 #include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#include <glm/vec2.hpp>
-#include <glm/gtx/quaternion.hpp>
-#include <glm/mat4x4.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include "BoneMesh.h"
 #include "mesh.h"
-#ifndef  STBI_LOADED_
-	#define STBI_LOADED_
-	#include <stb/stb_image.h>
-#endif
-using namespace Assimp;
-using namespace std;
+#include "Tile.h"
+#include "KeyFrame.h"
+using std::multimap;
+using glm::quat;
 using glm::vec3;
-using glm::vec2;
-using glm::ivec4;
 using glm::mat4;
-using glm::fquat;
+using std::string;
+using std::vector;
+using namespace Assimp;
 
-typedef unsigned int uint;
-
-struct BoneTransform;
-class Bone;
-class KeyFrame;
-class Animation;
-class AnimationLoader;
-class AnimatedModel;
-class Animator;
-
-
-struct BoneTransform {
-	//Parent coordinate system 
-	vec3 position;
-	fquat rotation;
-	vec3 scaling;
-};
-class Bone {
-private:
-	mat4 transformMatrix;
-	list<Bone> children;
-	unsigned int id;
+struct Bone {
 	string name;
-public:
-	void addChild(Bone child);
-	mat4 getTransformMatrix();
-	string getName();
-};
-class KeyFrame {
-	/*
-		Transformation of each bone per frame
-				POSES
-			Key(bone name)  Value(rot,scal and pos)
-			Leg  (2.3,2.1,5.6)(45,56,12)
-			Arm  (6.1,1.7,7.2)(89,56,42)
-			Head  (10.3,1.1,1.8)(11,34,93)
-			....
-	*/
-	map<string, BoneTransform> poses;//current poses of bones
-	float timeStamp;//time when frame starts
-public:
-	KeyFrame(float timeStamp, map<string, BoneTransform> poses);
-
-	float getTimeStamp();
-	map<string, BoneTransform> getPoses();
+	Bone* parent;
+	vector<Bone*> children;
+	mat4 transformation;
 };
 
-class Animation {
-	list<KeyFrame> frames;
-	int frameCount;
-	float duration;
-	float ticksPerSecond;
-	int error = 0;
+struct AnimData {
+	double ticksPerSecond = 0;
+	int numChannels = 0;
+	double duration = 0;
+	vector<KeyFrame*> keyFrames;
 	string name;
-	Animation() {}
-	Animation(const Animation& anim) {}
-public:
-	Animation(string name, float duration, float ticksPerSecond, list<KeyFrame> frames) {
-		this->frames = frames;
-		this->duration = duration;
-		this->name = name;
-		this->ticksPerSecond = ticksPerSecond;
-	}
-	list<KeyFrame> getFrames();
-
-	int getFramesCount();
-	float getDuration();
-	string getName();
-
-	void setError(int error);
-	bool isLoaded();
 };
 
 
-class AnimationLoader {
-public:
-	AnimationLoader();
-	Animation* loadAnimation(string modelPath);
-	Animation* loadAnimations(string modelPath);
-};
-
-class Animator {
-	AnimationLoader loader;
-	Animation* currentAnim;
-	float animationTime;
-	AnimatedModel* unit;
-public:
-	Animator();
-	void setUnit(AnimatedModel model);
-	void update(float time);
-	void render();
+struct BoneInfo {
+	mat4 BoneOffset;
+	int boneId;
 };
 
 class AnimatedModel {
 private:
-	bool loaded = false;
-	vector<Mesh> meshes;
-	vector<Texture> textures;
-	string directory;
-	string path;
-
-	//animation
-	Bone root;
-	Animator animator;
-public:
-	//(des/con)structors
-	AnimatedModel(string filePath);
-	~AnimatedModel();
-
-	/*ANIMATION*/
-	/*-------------------------------------*/
-
-
-
-	/*-------------------------------------*/
-
-	//getters/
-	bool getStatus();
-	string getFilePath();
-
 	//initializing
 	void initModel(string filePath);
 	void processNode(aiNode* node, const aiScene* scene);
-	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+	BoneMesh processMesh(aiMesh* mesh, const aiScene* scene);
 	vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType texType, string texName);
 	unsigned int loadTextureFromFile(const string& path, const string& directory, bool gamma = false);
+	void extractBoneInformation(const aiScene* scene, aiNode* currNode);
+	void createSkeleton(const aiScene* scene, aiNode* node, Bone* upgrNode);
+	KeyFrame** getNextAndPrevFrames(double animTime);
+	void AnimatedModel::initBoneTransform(aiNode* node);
+	//other
+	void updatePose(map<int, mat4> currentPose, Bone* bone, mat4 parentTransform);
+	bool isBone(aiAnimation* animation, string nodeName);
+	//void showSkeleton(Bone* bone);
+public:
+	bool loaded = false;
+	string path;
+	float currentFrameTime = 0;
+	//bones attributes
+	const int MAX_BONES = 4;
+	map<string, int> boneIds;
+	vector<BoneInfo> boneInfo;
+	map<string, mat4>* modelTransformations;
+	mat4 globalInvTransMatrix;
+	int lastBoneId = 0;
+	//model attributes
+	float width = 0, height = 0, depth = 0;
+	float x = 1000, y = 1000, z = 1000;
+	glm::mat4 matrix = mat4(1.0f);
+	glm::mat4 rotationMatrix = mat4(1.0f);
+	bool selected = false;//if object is selected
+	vector<BoneMesh> meshes;
+	vector<Texture> textures;
+	//animation attributes
+	Bone* rootBone = NULL;
+	AnimData* animData;
+	map<int, mat4> boneTransformations;
+
+	//(des/con)structors
+	AnimatedModel(string filePath);
+	AnimatedModel();
+	~AnimatedModel();
+
+	//getters
+	bool getStatus();
+	string getFilePath();
+	int getBoneCount();
+	mat4 getMatrix();
+	bool isSelected();
+	vec3 getCoords();
+	vec3 getVolume();
+
+	//setters
+	void setSelected(bool value);
+
+	//control
+	void translate(float x, float y, float z);
+	void translate(Tile tile);
+	void goTo(float x, float y, float z);
+	void extractData(string const &path, bool gamma = false);//if used empty constructor
+	void rotateRad(float rad, int axis);
+	void rotateDegree(float degree, int axis);
 	void draw(Shader shader);
+	void update(float elapsedTime);
+	
+	//other
+	AnimatedModel& operator=(const AnimatedModel& model);
+	AnimatedModel* operator=(const AnimatedModel* model);
 };
-
-
-
 #endif
