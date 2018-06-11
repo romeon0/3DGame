@@ -15,7 +15,9 @@ private:
 	vec3 origin;
 	vec3 direction;
 public:
-	void calculate(float mouseX, float mouseY, float scrWidth, float scrHeight, mat4 projection, mat4 camViewMatrix);
+	void calculate(float mouseX, float mouseY,
+		float scrWidth, float scrHeight,
+		mat4 projection, mat4 camViewMatrix);
 	vec3 getOrigin();
 	vec3 getDirection();
 	float oX();

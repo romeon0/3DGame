@@ -7,7 +7,7 @@
 #include <assimp/quaternion.h>
 #include <cmath>
 #include "Tile.h"
-#include "Model.h"
+#include "StaticModel.h"
 #include <vector>
 #include <chrono>
 using namespace std::chrono;
@@ -36,7 +36,7 @@ public:
 	/*Searching the value in interval [start, end] that is in interval with epsilon length*/
 	glm::vec3 binSearch(vec3 start, vec3 end, int currIteration, int iterations, float epsilon);
 
-	vector<Tile> getModelTiles(Model m);
+	vector<Tile> getModelTiles(StaticModel m);
 	vector<Tile> Helper::getModelTiles(vec3 params, vec3 coords);
 	glm::vec3 assimpVec3ToGlmVec3(aiVector3D assimpVec);
 	glm::quat assimpQuatToGlmQuat(aiQuaternion assimpQuat);

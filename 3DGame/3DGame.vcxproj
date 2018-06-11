@@ -24,15 +24,23 @@
     <ClInclude Include="AlgRayBoxAABB.h" />
     <ClInclude Include="AlgRayCasting.h" />
     <ClInclude Include="AmmoManager.h" />
-    <ClInclude Include="AmmoProperty.h" />
     <ClInclude Include="AnimatedModel.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="BoneMesh.h" />
-    <ClInclude Include="camera.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="CollideTesting.h" />
-    <ClInclude Include="Constants.h" />
+    <ClInclude Include="DrawingEngine.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="FileManager.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="IModel.h" />
+    <ClInclude Include="Observable.h" />
+    <ClInclude Include="Observer.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ProgressBar.h" />
+    <ClInclude Include="Properties.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="StaticModel.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="GameWorld.h" />
@@ -40,14 +48,10 @@
     <ClInclude Include="Helper.h" />
     <ClInclude Include="KeyFrame.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="mesh.h" />
-    <ClInclude Include="model.h" />
-    <ClInclude Include="player.h" />
-    <ClInclude Include="shader.h" />
     <ClInclude Include="SimpleModel.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Unit.h" />
-    <ClInclude Include="UnitAttribs.h" />
+    <ClInclude Include="UnitModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlgAStarPathfinder.cpp" />
@@ -56,26 +60,33 @@
     <ClCompile Include="AlgRayCasting.cpp" />
     <ClCompile Include="Ammo.cpp" />
     <ClCompile Include="AmmoManager.cpp" />
-    <ClCompile Include="AmmoProperty.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BoneMesh.cpp" />
-    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollideTesting.cpp" />
-    <ClCompile Include="Constants.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="KeyFrame.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="mesh.cpp" />
-    <ClCompile Include="model.cpp" />
-    <ClCompile Include="player.cpp" />
-    <ClCompile Include="shader.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="IModel.cpp" />
+    <ClCompile Include="Obserable.cpp" />
+    <ClCompile Include="Observer.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ProgressBar.cpp" />
+    <ClCompile Include="Properties.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleModel.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="AnimatedModel.cpp" />
+    <ClCompile Include="StaticModel.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="UnitModel.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E699A4E1-299D-47AE-8175-B39A7A99E173}</ProjectGuid>
@@ -133,8 +144,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\Projects\C++\3DGame_testVersion\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Projects\C++\3DGame_testVersion\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Projects\C++\3DGame\Libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Projects\C++\3DGame\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

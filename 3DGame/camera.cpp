@@ -8,6 +8,9 @@
 #include <iostream>
 #include "camera.h"
 
+using namespace std;
+#include "Helper.h"
+
 
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 // Camera Attributes
@@ -94,17 +97,10 @@ void  Camera::processKeyboard(Camera_Movement direction, float deltaTime)
 		position += tmpVec;
 	}
 	modelMatrix = glm::translate(modelMatrix, tmpVec);
-	/*float velocity = 0.125;
-	if (direction == FORWARD) {
-			position += worldUp * velocity;
-	}
-	if (direction == BACKWARD) {
-		position -= worldUp * velocity;
-	}
-	if (direction == LEFT)
-		position -= worldRight * velocity;
-	if (direction == RIGHT)
-		position += worldRight * velocity;*/
+	
+	cout << "position: ";
+	Helper h;
+	h.showVector(position);
 }
 
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

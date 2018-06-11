@@ -32,6 +32,8 @@ private:
 	void reconstructPath(int** cameFrom, Node curr, Node start, int rows, int cols);
 	void findPath(int** map, int rows, int cols, Node start, Node goal);
 public:
+	AlgAStarPathfinder();
+	~AlgAStarPathfinder();
 	vector<Tile> searchPath(int** map, int rows, int cols, Tile start, Tile goal);
 };
 

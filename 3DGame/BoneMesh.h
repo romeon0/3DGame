@@ -19,9 +19,9 @@ using glm::vec2;
 using std::string;
 
 struct BoneVertex {
-	vec3 position;
-	vec3 normal;
-	vec2 texCoords;
+	vec3 position = vec3(0, 0, 0);
+	vec3 normal = vec3(0, 0, 0);
+	vec2 texCoords = vec2(0, 0);
 	ivec4 boneIds = ivec4(0, 0, 0, 0);
 	vec4 boneWeights = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 };
@@ -29,7 +29,6 @@ struct BoneVertex {
 class BoneMesh {
 private:
 	void setupMesh();
-
 public:
 	vector<BoneVertex> vertices;
 	vector<unsigned int> indices;
@@ -42,12 +41,16 @@ public:
 	float x, y, z;
 
 	// constructor
-	BoneMesh(vector<BoneVertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+	BoneMesh(vector<BoneVertex>& vertices, vector<unsigned int>& indices, vector<Texture>& textures);
+	BoneMesh(const BoneMesh& boneMesh);
+	BoneMesh();
 	~BoneMesh();
+	BoneMesh& operator=(const BoneMesh& b);
+	BoneMesh* operator=(const BoneMesh* b);
 
 	void calculateVolume();
 	// render the mesh
-	void draw(Shader shader);
+	void draw(Shader& shader);
 	//getters
 	glm::vec3 getVolume();
 	glm::vec3 getCoords();

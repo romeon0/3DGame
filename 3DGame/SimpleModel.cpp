@@ -38,12 +38,20 @@ SimpleModel::SimpleModel(vector<Vertex> vertices, vector<unsigned int> indices, 
 	updateIndices(indices);
 	updateVertices(vertices);
 }
+SimpleModel::~SimpleModel() {
+	indices.clear();
+	vertices.clear();
+	glBindVertexArray(0);
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
+	glDeleteVertexArrays(1, &vao);
+}
 
 vector<Vertex> SimpleModel::getVertices() { return vertices; }
 vector<unsigned int> SimpleModel::getIndices() { return indices; }
 void SimpleModel::setName(string n) { name = n; }
 
-void SimpleModel::draw(Shader shader, GLenum drawMode) {
+void SimpleModel::draw(Shader& shader, GLenum drawMode) {
 	if (vertices.size() == 0) { cout << "NO VERTICES!\n"; return; }
 	
 	/*glBindVertexArray(vao);

@@ -1,0 +1,23 @@
+[Model]
+$Animated = 1
+$Path = models/anim_man2.dae
+$TextureFolder = models/textures/armors
+$Name = Player
+
+[Model]
+$Animated = 1
+$Path = models/anim_cube.dae
+$TextureFolder = models/textures/armors
+$Name = Enemy
+
+[Model]
+$Animated = 0
+$Path = models/map.dae
+$TextureFolder = models/textures/terrain
+$Name = Terrain
+
+[Model]
+$Animated = 1
+$Path = models/weapon.dae
+$TextureFolder = models/textures/weapons
+$Name = Weapon

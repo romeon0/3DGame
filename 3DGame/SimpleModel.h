@@ -29,16 +29,17 @@ private:
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
 	bool hasTexture;
+	GLuint vao, vbo, ibo;
 	unsigned int textureId=-1;
 
 	void SimpleModel::initModel(string texturePath);
 public:
-	GLuint vao, vbo, ibo;
-	SimpleModel(vector<Vertex> vertices, vector<unsigned int> indices, string texturePath="");
+	SimpleModel(vector<Vertex> vertices, vector<unsigned int> indices, string texturePath = "");
+	~SimpleModel();
 	vector<Vertex> getVertices();
 	vector<unsigned int> getIndices();
 	void setName(string n);
-	void draw(Shader shader, GLenum drawMode);
+	void draw(Shader& shader, GLenum drawMode);
 	void translate(float x, float y, float z);
 
 	void scale(float x, float y, float z);

@@ -1,3 +1,2 @@
-ScreenWidth = 800
-ScreenHeight = 800
-AmmosPath = ammo.lst
+$WindowWidth = 800
+$WindowHeight = 800

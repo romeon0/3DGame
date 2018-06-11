@@ -7,44 +7,6 @@ using glm::vec3;
 bool AlgRayBoxAABB::isCollided(vec3 boxMin, vec3 boxVolume, vec3 rayOrigin, vec3 rayDir) {
 
 	vec3 boxMax = boxMin + boxVolume;
-	// Improved method for x component
-
-
-	/////
-	//float tmin, tmax, tymin, tymax, tzmin, tzmax;
-	//if (rayDir.x >= 0) {
-	//	tmin = (boxMin.x - rayOrigin.x) / rayDir.x;
-	//	tmax = (boxMax.x - rayOrigin.x) / rayDir.x;
-	//}
-	//else {
-	//	tmin = (boxMax.x - rayOrigin.x) / rayDir.x;
-	//	tmax = (boxMin.x - rayOrigin.x) / rayDir.x;
-	//}
-	//if (rayDir.y >= 0) {
-	//	tymin = (boxMin.y - rayOrigin.y) / rayDir.y;
-	//	tymax = (boxMax.y - rayOrigin.y) / rayDir.y;
-	//}
-	//else {
-	//	tymin = (boxMax.y - rayOrigin.y) / rayDir.y;
-	//	tymax = (boxMin.y - rayOrigin.y) / rayDir.y;
-	//}
-	//if ((tmin > tymax) || (tymin > tmax)) return false;
-	//if (tymin > tmin) tmin = tymin;
-	//if (tymax < tmax) tmax = tymax;
-
-	//if (rayDir.z >= 0) {
-	//	tzmin = (boxMin.z - rayOrigin.z) / rayDir.z;
-	//	tzmax = (boxMax.z - rayOrigin.z) / rayDir.z;
-	//}
-	//else {
-	//	tzmin = (boxMax.z - rayOrigin.z) / rayDir.z;
-	//	tzmax = (boxMin.z - rayOrigin.z) / rayDir.z;
-	//}
-	//if ((tmin > tzmax) || (tzmin > tmax)) return false;
-	//if (tzmin > tmin) tmin = tzmin;
-	//if (tzmax < tmax) tmax = tzmax;
-	//return true;// ((tmin < t1) && (tmax > t0));
-
 
 	float tnear, tfar, tymin, tymax, tzmin, tzmax;
 	//check X. Set tnear and tfar to X coords(by default)

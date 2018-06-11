@@ -18,28 +18,41 @@ Map::Map(int mapWidth, int mapHeight) {
 		}
 	}
 }
+Map::~Map() {
+	for (StaticModel* obj: objects) {
+		delete obj;
+	}
+	objects.clear();
+	tiles.clear();
+	if (gridPatency != NULL) {
+		for (int a = 0; a < height; ++a) {
+			delete[] gridPatency[a];
+		}
+		delete[] gridPatency;
+	}
+}
 
 //getters
 int Map::getWidth() { return width; }
 int Map::getHeight() { return height; }
-vector<Model>& Map::getModels() {
+vector<StaticModel*>& Map::getModels() {
 	return objects;
 }
 vec3 Map::getTerrainVolume() {
-	return terrain.getVolume();
+	return terrain->getVolume();
 }
 vec3 Map::getTerrainCoords() {
-	return terrain.getCoords();
+	return terrain->getCoords();
 }
 mat4 Map::getMatrix(string objName) {
-	for (Model model : objects) {
-		if (model.getName().compare(objName) == 0)
-			return model.getMatrix();
+	for (StaticModel* model : objects) {
+		if (model->getProperty().name.compare(objName) == 0)
+			return model->getMatrix();
 	}
 	return mat4(1.0f);
 }
 mat4 Map::getTerrainMatrix() {
-	return terrain.getMatrix();
+	return terrain->getMatrix();
 }
 vector<Tile> Map::getNeighbors(Tile t) {
 	int x = t.getX();
@@ -101,39 +114,23 @@ bool Map::isBlocked(int x, int y) {
 	return gridPatency[x][y] == 1;
 }
 
-void Map::addObject(string modelPath, string modelName) {
-	Model model;
-	model.extractData(modelPath);
-	model.setName(modelName);
-
-	if (modelName.compare("Terrain") != 0)
-		objects.push_back(model);
-	else
-		terrain = model;
-
-	Helper helper;
-	vector<Tile> tiles = helper.getModelTiles(model);
-	for (Tile t : tiles) {
-		gridPatency[t.getX()][t.getY()] = 1;
-	}
-}
-void Map::addObject(Model model) {
-
-	if (model.getName().compare("Terrain") == 0)
+void Map::addObject(StaticModel*& model) {
+	cout << "ObjectName: " <<model->getProperty().name << endl;
+	if (model->getProperty().name.compare("Terrain") == 0)
 		terrain = model;
 	else {
 		objects.push_back(model);
-		vec3 coords = model.getCoords();
-		vec3 params = model.getVolume();
+		vec3 coords = model->getCoords();
+		vec3 params = model->getVolume();
 		Helper helper;
-		vector<Tile> tiles = helper.getModelTiles(model);
+		vector<Tile> tiles = helper.getModelTiles(*model);
 		for (Tile t : tiles) {
 			gridPatency[t.getX()][t.getY()] = 1;
 		}
 	}
 }
 
-Model Map::getTerrain() { return terrain; }
+StaticModel*& const Map::getTerrain() { return terrain; }
 
 
 

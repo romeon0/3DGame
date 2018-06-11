@@ -1,9 +1,9 @@
+#include <iostream>
 #include "Enemy.h"
-#include "Model.h"
+#include "IModel.h"
 #include "Unit.h"
 Enemy::Enemy() {}
 Enemy::Enemy(const Enemy& e){
-
 	this->route=route;//current unit path
 	this->currFrame = e.currFrame;
 	this->totalFrames = e.totalFrames;
@@ -17,15 +17,15 @@ Enemy::Enemy(const Enemy& e){
 	this->worldOriginX = e.worldOriginX;
 	this->worldOriginY = e.worldOriginY;
 	this->worldOriginZ = e.worldOriginZ;
-	this->model= e.model;
+	this->model = e.model;
 	this->type= e.type;
 }
-Enemy::Enemy(string modelPath, int tileX, int tileY):Unit(2,modelPath,tileX,tileY) {
+Enemy::Enemy(string modelPath, string name, int tileX, int tileY):Unit(2,name,modelPath,tileX,tileY) {
 }
-Enemy::Enemy(Model playerModel, int tileX, int tileY):Unit(2, playerModel, tileX, tileY) {
+Enemy::Enemy(UnitModel*& model, int tileX, int tileY):Unit(2, model, tileX, tileY) {
+	cout << "Enemy::Enemy: " << &this->model << endl;
 }
-
-Enemy Enemy::operator=(const Enemy& e) {
-	return Enemy(e.model, e.tileX, e.tileY);
+Enemy::~Enemy() {
+	std::cout << "Enemy::~Enemy\n";
 }
 

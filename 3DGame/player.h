@@ -1,10 +1,10 @@
 #pragma once
 #ifndef PLAYER_H_
 #define PLAYER_H_
-#include "model.h"
+#include "IModel.h"
 #include "Tile.h"
 #include "Unit.h"
-#include "AnimatedModel.h"
+#include "UnitModel.h"
 #include <vector>
 using std::vector;
 
@@ -13,9 +13,10 @@ private:
 	Player();
 	Player(const Player& p);
 public:
-	Player(string playerModelPath, int tileX, int tileY);
-	Player(Model playerModel, int tileX, int tileY);
-	Player Player::operator=(const Player& e);
+	Player(string playerModelPath, string name, int tileX, int tileY);
+	Player(UnitModel*& playerModel, int tileX, int tileY);
+	~Player();
+	Player& Player::operator=(Player& e);
 };
 
 #endif

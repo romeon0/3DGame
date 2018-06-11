@@ -10,6 +10,10 @@ using std::vector;
 using std::cout;
 using std::endl;
 
+AlgAStarPathfinder::AlgAStarPathfinder() {}
+AlgAStarPathfinder::~AlgAStarPathfinder() {
+	currPath.clear();
+}
 
 //functions
 int AlgAStarPathfinder::getDistanceBetween(Node node1, Node node2) {
@@ -111,15 +115,6 @@ void AlgAStarPathfinder::reconstructPath(int** cameFrom, Node curr, Node start, 
 
 
 void AlgAStarPathfinder::findPath(int** map, int rows, int cols, Node start, Node goal) {
-	/*for (int a = 0; a < cols; ++a) {
-		for (int b = 0; b < rows; ++b) {
-			cout << map[a][b] << " ";
-		}
-		cout << endl;
-	}*/
-
-
-	//cout << "Test1!\n";
 	currPath.clear();
 
 	if (map[start.x][start.y] != 0 || map[goal.x][goal.y] != 0) {

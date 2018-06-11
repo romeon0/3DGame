@@ -1,23 +1,23 @@
 [Ammo]
-type = 0
-name = .45 AP
-model = models/ammo.dae
-desc 
-{
-This type of ammo is using at pistol Beretta A21
+$Type = 0
+$Name = .45 AP
+$Model = models/ammo.dae
+$Desc = {
+This type of ammo is using at pistol Beretta A21.
+2This type of ammo is using at pistol Beretta A21.
+3This type of ammo is using at pistol Beretta A21.
 }
-damage = 40
-speed = 0.20
-penetration = 45
+$Damage = 40
+$Speed = 0.20
+$Penetration = 45
 
 [Ammo]
-type = 29
-name = 4.47
-model = models/ammo.dae
-desc 
-{
+$Type = 1
+$Name = 4.47
+$Model = models/ammo.dae
+$Desc = {
 This type of ammo is using at AK-47
 }
-damage = 120
-speed = 0.10
-penetration = 60
+$Damage = 120
+$Speed = 0.10
+$Penetration = 60

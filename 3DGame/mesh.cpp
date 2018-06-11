@@ -2,7 +2,6 @@
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 #include <gl/GL.h> // holds all OpenGL type declarations
-
 #include <assimp/Importer.hpp>
 
 #include <glm/glm.hpp>
@@ -10,6 +9,7 @@
 
 #include "shader.h"
 #include "mesh.h"
+#include "Helper.h"
 
 #include <string>
 #include <fstream>
@@ -38,18 +38,22 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
 
 	// now that we have all the required data, set the vertex buffers and its attribute pointers.
 	setupMesh();
+	
 }
 
 Mesh::~Mesh() {
-	/*cout << "Mesh removed" << endl;
+	cout << "Mesh::~Mesh1\n";
 	glActiveTexture(GL_TEXTURE0);
 	for (Texture t : textures)
 		glDeleteTextures(1, &t.id);
 	textures.clear();
+	indices.clear();
+	vertices.clear();
 	glBindVertexArray(0);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
-	glDeleteVertexArrays(1, &VAO);*/
+	glDeleteVertexArrays(1, &VAO);
+	cout << "Mesh::~Mesh2\n";
 }
 
 
@@ -88,8 +92,17 @@ void Mesh::calculateVolume() {
 	z = min.z;
 }
 // render the mesh
-void Mesh::draw(Shader shader)
-{
+void Mesh::draw(Shader* shader)
+{ 
+	/*Helper h;
+	for (int a = 0; a < 30; ++a) {
+		cout << "Mesh::Position: ";
+		h.showVector(vertices.at(a).Position);
+	}
+	for (int a = 0; a < 30; ++a) {
+		cout << "Mesh::Index: " << indices.at(a) << endl;
+	}*/
+
 	// bind appropriate textures
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
@@ -112,16 +125,15 @@ void Mesh::draw(Shader shader)
 			ss << heightNr++; // transfer unsigned int to stream
 		number = ss.str();
 		// now set the sampler to the correct texture unit
-		glUniform1i(glGetUniformLocation(shader.getId(), (name + number).c_str()), i);
+		glUniform1i(glGetUniformLocation(shader->getId(), (name + number).c_str()), i);
 		// and finally bind the texture
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
-
+	
 	// draw mesh
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT,(void*)0);
 	
-
 	//set to default
 	glBindVertexArray(0);
 	glActiveTexture(GL_TEXTURE0);
@@ -170,14 +182,43 @@ void Mesh::setupMesh()
 	// vertex bitangent
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
-	
 
-	/*// vertex bone names
-	glEnableVertexAttribArray(5);
-	glVertexAttribIPointer(5, 4, GL_INT, GL_FALSE, (void*)offsetof(Vertex, jointIDs));
-	// vertex bone weights
-	glEnableVertexAttribArray(6);
-	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, jointWeights));
-	*/
+	glBindVertexArray(0);
+}
+void Mesh::setupMesh2()
+{
+	// create buffers/arrays
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+	// load data into vertex buffers
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	// A great thing about structs is that their memory layout is sequential for all its items.
+	// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
+	// again translates to 3/2 floats which translates to a byte array.
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+	// set the vertex attribute pointers
+	// vertex Positions
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	// vertex normals
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+	// vertex texture coords
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+	// vertex tangent
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+	// vertex bitangent
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+
 	glBindVertexArray(0);
 }

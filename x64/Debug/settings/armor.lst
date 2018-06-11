@@ -1,0 +1,35 @@
+[Armor]
+$Type = ARMOR
+$Desc = {
+First and ugly armor
+}
+$Path = models/armors/armor.png
+$Name = Armor1 "Terror"
+
+[Armor]
+$Type = FACE
+$Desc = {
+First and ugly head armor.
+}
+$Path = models/armors/face.png
+$Name = Face1
+
+[Armor]
+$Type = BELOW
+$Path = models/armors/below.png
+$Name = Below1
+
+[Armor]
+$Type = ARMOR
+$Path = models/armors/armor2.png
+$Name = Armor2
+
+[Armor]
+$Type = FACE
+$Path = models/armors/face2.png
+$Name = Face2
+
+[Armor]
+$Type = BELOW
+$Path = models/armors/below2.png
+$Name = Below2

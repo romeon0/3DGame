@@ -1,7 +1,6 @@
 #include<vector>
-#include "Model.h"
+#include "UnitModel.h"
 #include "Tile.h"
-#include "UnitAttribs.h"
 
 #pragma once
 #ifndef UNIT_H_
@@ -9,7 +8,7 @@
 
 class Unit {
 protected:
-	string name = "ENEMY";
+	string name = "UNIT";
 	//movement
 	vector<Tile> route;//current unit path
 	int currFrame, totalFrames;
@@ -24,7 +23,7 @@ protected:
 
 	int tileX, tileY;//current coords
 	float worldOriginX, worldOriginY,worldOriginZ;//world origins
-	Model model;//unit model
+	UnitModel* model;//unit model
 	int type;
 
 	Unit();
@@ -36,23 +35,34 @@ protected:
 	float calculateRotationDegree(Tile nextTile);
 
 public:
-	Unit(int type, string playerModelPath, int tileX, int tileY);
-	Unit(int type, Model playerModel, int tileX, int tileY);
+	Unit(int type, string name, string playerModelPath, int tileX, int tileY);
+	Unit(int type, UnitModel*& playerModel, int tileX, int tileY);
+	~Unit();
 
 	//getters
 	int getTileX();
 	int getTileY();
 	Tile getTile();
-	Model& getModel();
+	UnitModel& getModel();
 	string getName();
+	int getMaxLife();
+	int getCurrLife();
+	int getMaxArmor();
+	int getCurrArmor();
 
 	//setters
 	void setTileX(int x);
 	void setTileY(int y);
 	void setTile(Tile t);
-	void setModel(Model model);
+	void setModel(UnitModel& model);
 	void setRoute(vector<Tile> route, bool returnToStartPos);
 	void setName(string name);
+	void setMaxLife(int life);
+	void setCurrLife(int life);
+	void setCurrArmor(int currArmor);
+	void setMaxArmor(int maxArmor);
+	void damage(int dmg);
+	void setSkin(ModelPart part, ModelProperty property);
 
 	//functions
 	void translate(float x, float y, float z);
@@ -60,31 +70,6 @@ public:
 	void update(double time);
 	bool hasRoute();
 	void rotate(float degree);
-
-	//mechanics
-	int getMaxLife() {
-		return maxLife;
-	}
-	int getCurrLife() { return currLife; }
-	int getMaxArmor() { return maxArmor; }
-	int getCurrArmor() { return currArmor; }
-
-	//setters
-	void setMaxLife(int life) {
-		this->maxLife = life;
-	}
-	void setCurrLife(int life) {
-		this->currLife = life;
-	}
-	void setCurrArmor(int currArmor) {
-		this->currArmor = currArmor;
-	}
-	void setMaxArmor(int maxArmor) {
-		this->maxArmor = maxArmor;
-	}
-	void damage(int dmg) {
-		setCurrLife(getCurrLife() - dmg);
-	}
 };
 
 #endif

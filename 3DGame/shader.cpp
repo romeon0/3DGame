@@ -95,14 +95,14 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, ShaderComplexit
 }
 
 Shader::~Shader() {
-	//std::cout << "Shader removed\n";
-	/*glUseProgram(0);
+	std::cout << "Shader::~Shader1\n";
+	glUseProgram(0);
 	glLinkProgramARB(0);
 	glDetachShader(ID, fragmentShader);
 	glDetachShader(ID, vertexShader);
 	glDetachShader(ID, geometryShader);
-	glDeleteProgram(ID);*/
-
+	glDeleteProgram(ID);
+	std::cout << "Shader::~Shader2\n";
 }
 // activate the shader
 // ------------------------------------------------------------------------

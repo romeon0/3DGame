@@ -23,7 +23,7 @@ struct Vertex {
 struct Texture {
 	unsigned int id;
 	string type;
-	aiString path;
+	string path;
 };
 
 class Mesh {
@@ -46,7 +46,7 @@ public:
 
 	void calculateVolume();
 	// render the mesh
-	void draw(Shader shader);
+	void draw(Shader* shader);
 	//getters
 	glm::vec3 getVolume();
 	glm::vec3 getCoords();
@@ -60,5 +60,6 @@ private:
 	/*  Functions    */
 	// initializes all the buffer objects/arrays
 	void setupMesh();
+	void setupMesh2();
 };
 #endif

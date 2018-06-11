@@ -72,7 +72,7 @@ glm::vec3 Helper::binSearch(vec3 start, vec3 end, int currIteration, int iterati
 }
 
 /*Get tiles that occupied by model*/
-vector<Tile> Helper::getModelTiles(Model m) {
+vector<Tile> Helper::getModelTiles(StaticModel m) {
 	vector<Tile> tiles = getModelTiles(m.getCoords(), m.getVolume());
 	return tiles;
 }
@@ -190,7 +190,6 @@ glm::quat Helper::assimpQuatToGlmQuat(aiQuaternion assimpQuat) {
 	glmQuat.y = assimpQuat.y;
 	glmQuat.z = assimpQuat.z;
 	glmQuat.w = assimpQuat.w;
-
 	return glmQuat;
 }
 
@@ -247,7 +246,7 @@ void Helper::showVector(aiVector3D vector) {
 	cout << vector.x << " " << vector.y << " " << vector.z << endl;
 }
 void Helper::showQuat(quat q) {
-	printf("%.6f %.6f %.6f\n", q.x, q.y, q.z);
+	printf("%.6f %.6f %.6f %.6f\n", q.x, q.y, q.z, q.w);
 }
 
 timePoint Helper::getCurrentTimePoint() {
@@ -271,8 +270,11 @@ float Helper::calcDegreeBetween(vec3 v1, vec3 v2) {
 	float len1 = length(v1);
 	float len2 = length(v2);
 	float product = dot(v1, v2);
-	return acos(product / (len1*len2));
+//	return acos(product / (len1*len2));
+	return degrees(acos(product / (len1*len2)));
+//	return (product / (len1*len2)*180.0f) / 3.1459;
 }
+
 float Helper::calcDegreeBetween(vec2 v1, vec2 v2) {
 	float len1 = length(v1);
 	float len2 = length(v2);

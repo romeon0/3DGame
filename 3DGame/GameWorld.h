@@ -18,37 +18,45 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <map>
 #include <cfloat>
 #include "shader.h"
 #include "camera.h"
-#include "model.h"
+#include "StaticModel.h"
 #include "AnimatedModel.h"
+#include "UnitModel.h"
 #include "SimpleModel.h"
 #include "AlgRayBoxAABB.h"
 #include "AlgRayCasting.h"
+#include "AlgAStarPathfinder.h"
 #include "Helper.h"
 #include "player.h"
 #include "Enemy.h"
-#include "AlgAStarPathfinder.h"
 #include "Map.h"
 #include "AmmoManager.h"
 #include "TextManager.h"
 #include "ProgressBar.h"
+#include "FileManager.h"
+#include "DrawingEngine.h"
+#include "Observer.h"
+#include "Observable.h"
 using glm::vec3;
+using std::pair;
 using glm::mat4;
 
 
 
-class GameWorld {
+class GameWorld : protected Observable {
 private:
 	// settings
-	unsigned int SCR_WIDTH = 800;
-	unsigned int SCR_HEIGHT = 600;
+	double windowWidth = 800;
+	double windowHeight = 600;
 	float worldOriginX, worldOriginY, worldOriginZ;
+	FileManager* fileManager;
 	// camera
 	Camera* camera;
-	double lastX = SCR_WIDTH / 2.0;
-	double lastY = SCR_HEIGHT / 2.0;
+	double lastX = windowWidth / 2.0;
+	double lastY = windowHeight / 2.0;
 	bool firstMouse = true;
 	// timing
 	float currentDeltaTime;
@@ -57,11 +65,10 @@ private:
 	float FPS = 30.0f;// frames per second
 	float FRAME_TIME = (1000.0f / FPS);//miliseconds
 	//models/objects
-	SimpleModel* clickedLine;
-	SimpleModel* pathLine;
-	SimpleModel* screenBox;
 	SimpleModel* mouseModel;
+	SimpleModel* mouseRay;
 	SimpleModel* centerLine;
+	SimpleModel* pathLine;
 	//objects settings
 	bool drawGrid = true;
 	//matrices
@@ -69,9 +76,6 @@ private:
 	mat4 clickedMatrix;//
 	//window
 	GLFWwindow* window;
-	//shaders
-	Shader *ourShader, *gridShader, *lineShader, *primitiveScreenShader,*animShader;
-	Shader* outlineShader, *colorShader, *mouseShader;
 	//other classes
 	AlgRayCasting* rayCasting;
 	AlgRayBoxAABB* rayboxCollision;
@@ -82,15 +86,26 @@ private:
 	AmmoManager* ammoManager;
 	//Player
 	Player* player;
-	Model* model;
+	//drawing
+	DrawingEngine* drawingEngine;
 	//
 	Enemy* selectedEnemy;
 	TextManager* textManager;
+	vector<Enemy*> enemies;
+	SimpleModel* simpleCube;
+	SimpleModel* enemyInfo;
+	SimpleModel* mainPanel;
+	SimpleModel* playerInfo;
+	ProgressBar* bar;
 
+	StaticModel* terrain;
+	Shader* gridShader;
+	Ammo* ammo;
+	StaticModel* ammoModel;
 	// process all inputs
 	//-------------------
 	//-realtime process input(not using)
-	void processInput(GLFWwindow *window);
+	//void processInput(GLFWwindow *window);
 	//-process keyboard
 	static void  keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void framebuffer_sizeCallback(GLFWwindow* window, int width, int height);
@@ -99,26 +114,23 @@ private:
 	static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 	//-------------------
 
+	//game lifecycle
 	int init();
 	void finish();
 	int run();
 	void draw();
 	void collide();
-	void drawWithOutline(AnimatedModel* model);
-	void drawWithOutline(Model* model, vec3 color=vec3(0.0f, 0.0f, 0.0f));
-	void drawMouse();
-	void drawLines(vector<Vertex> vertices, vector<unsigned int> indices);
 	void update(double time);
 	void input();
-	void drawSimpleCube(vec3 min, vec3 max);
-
+	//creating
+	SimpleModel* createGUI(string imagePath, double screenX, double screenY, double width, double height);
+	SimpleModel* createSimpleCube(vec3 min, vec3 volume, string texturePath = "");
+	SimpleModel* createLine(vector<Vertex> vertices, vector<unsigned int> indices, string texturePath = "");
 	//ray colliding
 	map<double, Enemy*> checkRayWithEnemies(vec3 origin, vec3 direction);
-	map<double, Model*>checkRayWithMapObjs(vec3 origin, vec3 direction);
+	map<double, StaticModel*>checkRayWithMapObjs(vec3 origin, vec3 direction);
 	pair<bool, double> checkRayWithPlayer(vec3 origin, vec3 direction);
 	bool checkRayWithTerrain(vec3 origin, vec3 direction);
-	//body colliding
-	bool checkCollide(vec3 coordsBody1, vec3 volumeBody1, vec3 coordsBody2, vec3 volumeBody2);
 
 	GameWorld();
 	GameWorld::GameWorld(const GameWorld& g);
@@ -126,21 +138,14 @@ private:
 		return *this;
 	}
 public:
-	vector<Enemy*> enemies;
-	SimpleModel* simpleCube;
-	SimpleModel* enemyInfo;
-	SimpleModel* mainPanel;
-	SimpleModel* playerInfo;
-	ProgressBar* bar;
-	AnimatedModel* animModel;
-
+	//controls
 	void start();
 
+	//getters
 	static GameWorld &getInstance() {
 		static GameWorld instance;
 		return instance;
 	}
-
 	float getWorldOriginX() {
 		return worldOriginX;
 	}
@@ -150,18 +155,13 @@ public:
 	float getWorldOriginZ() {
 		return worldOriginZ;
 	}
-
 	vec3 getWorldOrigin() {
 		return vec3(worldOriginX, worldOriginY, worldOriginZ);
 	}
 
-	
-
 	//testing
 	void GameWorld::enemyAttacked(Enemy* enemy);
 	void GameWorld::terrainAttacked(vec3 origin, vec3 direction);
-	void drawText(string text, double screenX, double screenY);
-	void initGUIImage(SimpleModel & model, double screenX, double screenY, double width, double height);
 };
 
 #endif GAMEWORLD_H_

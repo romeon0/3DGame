@@ -19,10 +19,6 @@ void AlgRayCasting::calculate(float mouseX, float mouseY, float scrWidth, float 
 	screenPos = vec3(mouseX, scrHeight - mouseY - 1, 1.0f);
 	vec3 destiny = unProject(screenPos, camViewMatrix, projection, viewport);//far
 	direction = vec3(destiny.x - origin.x, destiny.y - origin.y, destiny.z - origin.z);
-	//origin = normalize(origin);
-	//direction = normalize(direction);
-	/*std::cout << "Origin pos: " << origin.x << ", " << origin.y << ", " << origin.z << std::endl;
-	std::cout << "Direction pos: " << direction.x << ", " << direction.y << ", " << direction.z << std::endl;*/
 }
 
 vec3 AlgRayCasting::getOrigin() { return origin; }

@@ -3,19 +3,20 @@
 #define MAP_H_
 #include "Tile.h"
 #include <vector>
-#include "model.h"
+#include "StaticModel.h"
 #include <glm/mat4x4.hpp>
 using std::vector;
 
 class Map {
 private:
-	Model terrain;
-	vector<Model> objects;
+	StaticModel* terrain;
+	vector<StaticModel*> objects;
 	vector<Tile> tiles;
 	int width, height;
 	int** gridPatency;
 public:
 	Map(int width, int height);
+	~Map();
 
 	//getters
 	vector<Tile> getNeighbors(Tile t);
@@ -23,15 +24,14 @@ public:
 	int getHeight();
 	mat4 getMatrix(string objName);
 	mat4 getTerrainMatrix();
-	vector<Model>& getModels();
+	vector<StaticModel*>& getModels();
 	vec3 getTerrainVolume();
 	vec3 getTerrainCoords();
 	int** getGridPatency();
-	Model getTerrain();
+	StaticModel*& const getTerrain();
 
 	//other
-	void addObject(string modelPath, string modelName);
-	void addObject(Model model);
+	void addObject(StaticModel*& model);
 	bool isBlocked(int x, int y);
 
 };

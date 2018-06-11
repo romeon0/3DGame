@@ -18,35 +18,106 @@
 #include <random>
 #include <chrono>
 #include<glm/vec4.hpp>
+#include "Helper.h"
+
 using glm::vec4;
 using namespace std;
 
 /*  Functions  */
 // constructor
-BoneMesh::BoneMesh(vector<BoneVertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
-{
+BoneMesh::BoneMesh(vector<BoneVertex>& vertices, vector<unsigned int>& indices, vector<Texture>& textures){
+	cout << "BoneMesh::BoneMesh(v,i,t)\n";
 	assert(vertices.size() != 0);
 	assert(indices.size() != 0);
 
-	this->vertices = vertices;
-	this->indices = indices;
-	this->textures = textures;
+	this->vertices.insert(this->vertices.end(), vertices.begin(), vertices.end());
+	this->indices.insert(this->indices.end(), indices.begin(), indices.end());
+	this->textures.insert(this->textures.end(), textures.begin(), textures.end());
 
 	calculateVolume();
 	setupMesh();
 }
+BoneMesh::BoneMesh(const BoneMesh& boneMesh) {
+	cout << "BoneMesh::BoneMesh(boneMesh)\n";
+	system("pause");
+	assert(boneMesh.vertices.size() != 0);
+	assert(boneMesh.indices.size() != 0);
 
-BoneMesh::~BoneMesh() {
-	//TODO implement destructor
-	/*cout << "Mesh removed" << endl;
-	glActiveTexture(GL_TEXTURE0);
-	for (Texture t : textures)
-	glDeleteTextures(1, &t.id);
-	textures.clear();
+	this->vertices.insert(this->vertices.end(), boneMesh.vertices.begin(), boneMesh.vertices.end());
+	this->indices.insert(this->indices.end(), boneMesh.indices.begin(), boneMesh.indices.end());
+	this->textures.insert(this->textures.end(), boneMesh.textures.begin(), boneMesh.textures.end());
+	this->VAO = boneMesh.VAO;
+	this->VBO = boneMesh.VBO;
+	this->EBO = boneMesh.EBO;
+	this->width = boneMesh.width;
+	this->height = boneMesh.height;
+	this->depth = boneMesh.depth;
+	this->x = boneMesh.x;
+	this->y = boneMesh.y;
+	this->z = boneMesh.z;
+}
+BoneMesh::BoneMesh() {
+	this->vertices = vector<BoneVertex>();
+}
+
+BoneMesh::~BoneMesh(){
+	cout << "BoneMesh::~BoneMesh1\n";
+	cout << "BoneMesh::~BoneMesh2\n";
 	glBindVertexArray(0);
-	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
-	glDeleteVertexArrays(1, &VAO);*/
+	glDeleteBuffers(1, &VBO);
+	glDeleteVertexArrays(1, &VAO);
+	cout << "BoneMesh::~BoneMesh3\n";
+}
+
+BoneMesh & BoneMesh::operator=(const BoneMesh & b){
+	cout << "Called BoneMesh::operator=1\n";
+	color = b.color;
+	colorMode = b.colorMode;
+	depth = b.depth;
+	width = b.width;
+	height = b.height;
+	x = b.x;
+	y = b.y;
+	z = b.z;
+	for (int a = 0; a < b.indices.size(); ++a) {
+		indices.push_back(b.indices.at(a));
+	}
+	for (int a = 0; a < b.vertices.size(); ++a) {
+		vertices.push_back(b.vertices.at(a));
+	}
+	for (int a = 0; a < b.textures.size(); ++a) {
+		textures.push_back(b.textures.at(a));
+	}
+	VAO = b.VAO;
+	VBO = b.VBO;
+	EBO = b.EBO;
+	return *this;
+}
+
+BoneMesh* BoneMesh::operator=(const BoneMesh* b) {
+	cout << "Called BoneMesh::operator=2\n";
+	color = b->color;
+	colorMode = b->colorMode;
+	depth = b->depth;
+	width = b->width;
+	height = b->height;
+	x = b->x;
+	y = b->y;
+	z = b->z;
+	for (int a = 0; a < b->indices.size(); ++a) {
+		indices.push_back(b->indices.at(a));
+	}
+	for (int a = 0; a < b->vertices.size(); ++a) {
+		vertices.push_back(b->vertices.at(a));
+	}
+	for (int a = 0; a < b->textures.size(); ++a) {
+		textures.push_back(b->textures.at(a));
+	}
+	VAO = b->VAO;
+	VBO = b->VBO;
+	EBO = b->EBO;
+	return this;
 }
 
 vector<BoneVertex> BoneMesh::getVertices() {
@@ -84,32 +155,30 @@ void BoneMesh::calculateVolume() {
 	z = -min.z;
 }
 // render the mesh
-void BoneMesh::draw(Shader shader)
-{
-	// bind appropriate textures
+void BoneMesh::draw(Shader& shader) {
+	if (vertices.size() == 0) return;
+
+	// bind textures
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
 	unsigned int normalNr = 1;
 	unsigned int heightNr = 1;
-	for (unsigned int i = 0; i < textures.size(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i); // active before binding
-										  // retrieve texture number (the N in diffuse_textureN)
+	for (unsigned int i = 0; i < textures.size(); i++){
+		glActiveTexture(GL_TEXTURE0 + i); 
+										  
 		stringstream ss;
 		string number;
 		string name = textures[i].type;
 		if (name == "texture_diffuse")
-			ss << diffuseNr++; // transfer unsigned int to stream
+			ss << diffuseNr++; 
 		else if (name == "texture_specular")
-			ss << specularNr++; // transfer unsigned int to stream
+			ss << specularNr++; 
 		else if (name == "texture_normal")
-			ss << normalNr++; // transfer unsigned int to stream
+			ss << normalNr++; 
 		else if (name == "texture_height")
-			ss << heightNr++; // transfer unsigned int to stream
+			ss << heightNr++; 
 		number = ss.str();
-		// now set the sampler to the correct texture unit
 		glUniform1i(glGetUniformLocation(shader.getId(), (name + number).c_str()), i);
-		// and finally bind the texture
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
 
@@ -117,10 +186,9 @@ void BoneMesh::draw(Shader shader)
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, (void*)0);
 
-
 	//set to default
-	glBindVertexArray(0);
 	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(0);
 }
 
 glm::vec3 BoneMesh::getVolume() {
@@ -145,6 +213,7 @@ void BoneMesh::setupMesh()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
+
 	// set the vertex attribute pointers
 	// vertex Positions
 	glEnableVertexAttribArray(0);
@@ -166,6 +235,8 @@ void BoneMesh::setupMesh()
 }
 
 void BoneMesh::addBoneData(unsigned int vertexId, float weight, unsigned int boneId) {
+	//printf("Im here: %d% , %.7f :: %d \n", vertexId, weight, vertices.size());
+
 	vec4 weights = vertices.at(vertexId).boneWeights;
 	bool found = false;
 	for (int a = 0; a < 4; ++a) {
@@ -176,11 +247,12 @@ void BoneMesh::addBoneData(unsigned int vertexId, float weight, unsigned int bon
 			break;
 		}
 	}
-
 	assert(found);//more than 4 bones influences this vertex
 }
 
 void BoneMesh::update() {
+	if (vertices.size() == 0) return;
+
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(BoneVertex), &vertices[0], GL_STATIC_DRAW);

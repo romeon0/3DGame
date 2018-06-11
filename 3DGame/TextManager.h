@@ -14,52 +14,28 @@ private:
 	map<string, bool> drawText;
 	map<string, SimpleModel*> fonts;
 public:
-	void addText(string name, Text* text) {
-		texts.insert(make_pair(name, text));
-		drawText.insert(make_pair(name, true));
-	}
-	void addText(string name, string text, string fontType, double screenX, double screenY, double fontSizeX, double fontSizeY, double SCR_WIDTH, double SCR_HEIGHT) {
-		for (pair<string, SimpleModel*> font : fonts) {
-			if (font.first.compare(fontType) == 0) {
-				addText(name, new Text(text, font.second, screenX, screenY, fontSizeX,fontSizeY, SCR_WIDTH, SCR_HEIGHT));
-				drawText.insert(make_pair(name, true));
-				break;
-			}
-		}
-	}
-	void addText(string name, string text, SimpleModel* model, double screenX, double screenY, double fontSizeX, double fontSizeY, double SCR_WIDTH, double SCR_HEIGHT) {
-		addText(name, new Text(text, model, screenX, screenY,fontSizeX,fontSizeY, SCR_WIDTH, SCR_HEIGHT));
-		drawText.insert(make_pair(name, true));
-	}
-	void addFont(string type, SimpleModel* model) {
-		fonts.insert(make_pair(type, model));
-	}
-	void updateText(string textName, string text, double scrWidth, double scrHeight) {
-		if (texts.find(textName) != texts.end()) {
-			texts.at(textName)->updateText(text,scrWidth,scrHeight);
-		}
-	}
+	~TextManager();
 
-	void removeText(string name) {
-		if (texts.find(name) != texts.end()) {
-			texts.erase(name);
-		}
-	}
+	void addText(string name, Text* text);
+	void addText(string name, string text, string fontType, 
+		double screenX, double screenY, 
+		double fontSizeX, double fontSizeY, 
+		double SCR_WIDTH, double SCR_HEIGHT);
+	void addText(string name, string text, SimpleModel* model, 
+		double screenX, double screenY, 
+		double fontSizeX, double fontSizeY, 
+		double SCR_WIDTH, double SCR_HEIGHT);
 
-	void draw(Shader shader) {
-		for (pair<string,Text*> text : texts) {
-			shader.use();
-			if(drawText.at(text.first))
-				text.second->getModel()->draw(shader,GL_TRIANGLES);
-		}
-	}
+	void addFont(string type, SimpleModel* model);
+	void updateText(string textName, string text, double scrWidth, double scrHeight);
 
-	void blockDraw(string textName) {
-		drawText.at(textName) = false;
-	}
-	void allowDraw(string textName) {
-		drawText.at(textName) = true;
-	}
+	void removeText(string name);
+
+	const map<string, Text*>& getTexts();
+
+	void blockDraw(string textName);
+	void allowDraw(string textName);
+	bool canDraw(string textName);
 };
 
 #endif 
