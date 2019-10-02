@@ -1,3 +1,5 @@
+# [PROJECT ABANDONED]
+
 # 3DGame
 <b>Introduction</b><br>
 I am Ghercioglo ”Romeon0” Roman, student in Romania, 22 old. This is my side project that I create for fun. I am working alone, all code(with some exceptions) is wrote by me. This project is my first try to make a 3D game, so far I wrote some games like 2D zombie shooter(very lagged if honest), the first game(in console) Snake and some kind of server-client game like Agar.io. Yes, does not inspire...
